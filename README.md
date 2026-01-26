@@ -11,7 +11,7 @@ A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a 
 - 📊 **Real-time Usage Tracking** - Monitors your MiniMax coding plan usage
 - 🔒 **Secure API Key Storage** - Uses macOS Keychain for safe credential storage
 - ⚙️ **Customizable Settings** - Configure refresh intervals and preferences
-- 🚀 **GitHub Ready** - Clean project structure ready for open-source contribution
+- 🚀 **First-Launch Setup** - Easy API key entry via setup window
 
 ## Installation
 
@@ -25,17 +25,11 @@ A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/minimax-menu-monitor.git
+   git clone https://github.com/doublezz10/minimax-menu-monitor.git
    cd minimax-menu-monitor
    ```
 
-2. **Configure your API key**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your MiniMax API key
-   ```
-
-3. **Run the setup script**
+2. **Run the setup script**
    ```bash
    chmod +x setup.sh
    ./setup.sh
@@ -46,12 +40,17 @@ A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a 
    - Generate the Xcode project
    - Build the app
 
-4. **Run the app**
+3. **Run the app**
    ```bash
    open build/Debug/MinimaxMenuMonitor.app
    ```
 
    Or open `MinimaxMenuMonitor.xcodeproj` in Xcode and press Cmd+R.
+
+4. **First Launch Setup**
+   - On first launch, a setup window will appear
+   - Enter your MiniMax API key
+   - Click "Continue" to start tracking!
 
 ### Getting Your MiniMax API Key
 
@@ -59,7 +58,7 @@ A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a 
 2. Sign in to your account
 3. Navigate to API settings
 4. Generate a new API key
-5. Copy the key to your `.env` file
+5. Enter it in the first-launch setup window
 
 ### Demo Mode
 
@@ -75,30 +74,12 @@ Demo mode is great for:
 - Taking screenshots for documentation
 - Showing the app to others
 
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file in the project root:
-
-```bash
-# Your MiniMax API Key
-MINIMAX_API_KEY=your_api_key_here
-
-# Refresh interval in seconds (default: 60)
-REFRESH_INTERVAL=60
-
-# App settings
-APP_BUNDLE_PREFIX=com.yourname
-APP_NAME=MinimaxMenuMonitor
-```
-
-### Settings in App
+## Settings
 
 After launching the app, click the menu bar icon and select "Settings" to configure:
-- API key (stored securely in Keychain)
+- Change API key (opens setup window)
 - Refresh interval
-- Display preferences
+- Demo mode toggle
 
 ## Architecture
 
@@ -106,7 +87,6 @@ After launching the app, click the menu bar icon and select "Settings" to config
 minimax-menu-monitor/
 ├── project.yml              # XcodeGen configuration
 ├── setup.sh                 # Build and setup script
-├── .env.example             # Environment template
 ├── Sources/
 │   ├── App/
 │   │   ├── MinimaxMenuMonitorApp.swift
@@ -170,8 +150,9 @@ The app follows SwiftUI best practices with:
 ## Security
 
 - **API Key Storage**: All API keys are stored in macOS Keychain
-- **Environment Variables**: Local `.env` file is gitignored
+- **First-Launch Setup**: API keys entered via secure setup window
 - **No Hardcoded Secrets**: All credentials loaded at runtime
+- **Private by Design**: No external servers, all data stays local
 
 ## Contributing
 
