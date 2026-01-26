@@ -2,8 +2,6 @@
 
 A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a stunning liquid glass interface.
 
-![Menu Bar Demo](docs/demo.png)
-
 ## Features
 
 - 🍏 **Native MacOS Menu Bar App** - Runs quietly in your menu bar
