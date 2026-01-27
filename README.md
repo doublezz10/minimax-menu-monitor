@@ -55,26 +55,12 @@ A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a 
 4. Generate a new API key
 5. Enter it in the first-launch setup window
 
-### Demo Mode
-
-You can preview the app UI without providing a real API key:
-
-1. Launch the app
-2. Click the menu bar icon and select "Settings" (gear icon)
-3. Toggle "Demo Mode" on
-4. The app will display simulated usage data so you can preview the liquid glass interface
-
-Demo mode is great for:
-- Testing the UI before adding your API key
-- Taking screenshots for documentation
-- Showing the app to others
-
 ## Settings
 
 After launching the app, click the menu bar icon and select "Settings" to configure:
 - Change API key (opens setup window)
 - Refresh interval
-- Demo mode toggle
+- Quit the app
 
 ## Architecture
 
