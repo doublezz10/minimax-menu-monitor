@@ -32,12 +32,6 @@ final class UsageMonitor: ObservableObject {
     }
 
     func refresh() async {
-        // Demo mode: return mock data
-        if Settings.shared.demoMode {
-            await generateDemoData()
-            return
-        }
-
         guard hasValidKey else {
             error = APIError.unauthorized
             return
@@ -55,32 +49,6 @@ final class UsageMonitor: ObservableObject {
             self.error = error
         }
 
-        isLoading = false
-    }
-
-    private func generateDemoData() async {
-        isLoading = true
-        error = nil
-
-        // Simulate network delay
-        try? await Task.sleep(nanoseconds: 500_000_000)
-
-        // Generate random demo data
-        let total = 1_000_000
-        let used = Int.random(in: 200_000...700_000)
-        let remains = total - used
-
-        self.usageData = UsageData(
-            totalCount: total,
-            usedCount: used,
-            remainingCount: remains,
-            remainingTimeMs: 3600000, // 1 hour demo
-            startTimeMs: Int64(Date().timeIntervalSince1970 * 1000),
-            endTimeMs: Int64((Date().timeIntervalSince1970 + 3600) * 1000),
-            modelName: "Demo Model"
-        )
-        self.lastUpdated = Date()
-        self.error = nil
         isLoading = false
     }
 

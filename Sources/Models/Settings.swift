@@ -20,10 +20,6 @@ final class Settings: ObservableObject {
         didSet { save() }
     }
 
-    @Published var demoMode: Bool {
-        didSet { save() }
-    }
-
     private let defaults: UserDefaults
 
     private init() {
@@ -34,7 +30,6 @@ final class Settings: ObservableObject {
         refreshInterval = loadedRefreshInterval > 0 ? loadedRefreshInterval : 60
         showPercentage = defaults.bool(forKey: "showPercentage")
         useGradient = defaults.bool(forKey: "useGradient")
-        demoMode = defaults.bool(forKey: "demoMode")
         apiKey = defaults.string(forKey: "apiKey") ?? ""
     }
 
@@ -43,7 +38,6 @@ final class Settings: ObservableObject {
         defaults.set(refreshInterval, forKey: "refreshInterval")
         defaults.set(showPercentage, forKey: "showPercentage")
         defaults.set(useGradient, forKey: "useGradient")
-        defaults.set(demoMode, forKey: "demoMode")
     }
 
     func clear() {

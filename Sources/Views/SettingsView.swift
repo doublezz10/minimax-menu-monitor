@@ -3,7 +3,6 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var usageMonitor: UsageMonitor
     @State private var refreshInterval: Double = 60
-    @State private var demoMode: Bool = false
     @State private var saveStatus: SaveStatus = .idle
 
     enum SaveStatus: Equatable {
@@ -26,10 +25,8 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            demoModeBanner
             apiKeySection
             refreshSection
-            demoModeToggle
             refreshButton
             quitButton
             statusMessage
@@ -37,26 +34,6 @@ struct SettingsView: View {
         .padding()
         .onAppear {
             loadSettings()
-        }
-    }
-
-    @ViewBuilder
-    private var demoModeBanner: some View {
-        if Settings.shared.demoMode {
-            HStack {
-                Image(systemName: "play.circle.fill")
-                    .foregroundColor(.yellow)
-                Text("Demo Mode Active")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundColor(.white)
-                Spacer()
-                Text("Using simulated data")
-                    .font(.caption)
-                    .foregroundColor(.white.opacity(0.6))
-            }
-            .padding()
-            .background(Color.yellow.opacity(0.2))
-            .cornerRadius(10)
         }
     }
 
@@ -141,29 +118,6 @@ struct SettingsView: View {
         }
     }
 
-    private var demoModeToggle: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: "play.circle.fill")
-                    .foregroundColor(.yellow)
-                Text("Demo Mode")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundColor(.white.opacity(0.9))
-                Spacer()
-                Toggle("", isOn: $demoMode)
-                    .labelsHidden()
-                    .toggleStyle(SwitchToggleStyle(tint: .cyan))
-                    .onChange(of: demoMode) { _ in
-                        Settings.shared.demoMode = demoMode
-                    }
-            }
-
-            Text("Use simulated data to preview the UI")
-                .font(.caption)
-                .foregroundColor(.white.opacity(0.6))
-        }
-    }
-
     private var refreshButton: some View {
         Button(action: {
             Task {
@@ -230,7 +184,6 @@ struct SettingsView: View {
 
     private func loadSettings() {
         refreshInterval = Settings.shared.refreshInterval
-        demoMode = Settings.shared.demoMode
     }
 
     private func openKeySetup() {

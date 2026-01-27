@@ -10,7 +10,7 @@ struct UsageView: View {
                 loadingView
             } else if let error = usageMonitor.error {
                 errorView(error)
-            } else if usageMonitor.hasValidKey || Settings.shared.demoMode {
+            } else if usageMonitor.hasValidKey {
                 usageDisplay
             } else {
                 emptyStateView
