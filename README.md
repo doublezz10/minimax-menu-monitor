@@ -16,8 +16,8 @@ A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a 
 ### Prerequisites
 
 - macOS 12.0 (Monterey) or later
-- Xcode 15.0 or later
-- Homebrew (recommended for XcodeGen)
+- Xcode Command Line Tools (installed via `xcode-select --install`)
+- Homebrew (for XcodeGen installation)
 
 ### Setup
 
@@ -29,7 +29,6 @@ A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a 
 
 2. **Run the setup script**
    ```bash
-   chmod +x setup.sh
    ./setup.sh
    ```
 
@@ -42,8 +41,6 @@ A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a 
    ```bash
    open build/Debug/MinimaxMenuMonitor.app
    ```
-
-   Or open `MinimaxMenuMonitor.xcodeproj` in Xcode and press Cmd+R.
 
 4. **First Launch Setup**
    - On first launch, a setup window will appear
@@ -125,11 +122,20 @@ minimax-menu-monitor/
 
 ### Building
 
-```bash
-# Generate Xcode project
-xcodegen generate
+After making code changes, rebuild and run:
 
-# Build
+```bash
+# Rebuild the app
+./setup.sh
+
+# Run the app
+open build/Debug/MinimaxMenuMonitor.app
+```
+
+Or rebuild manually:
+
+```bash
+xcodegen generate
 xcodebuild -project MinimaxMenuMonitor.xcodeproj \
     -scheme MinimaxMenuMonitor \
     -configuration Debug \
