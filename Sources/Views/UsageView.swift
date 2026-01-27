@@ -184,29 +184,35 @@ struct UsageView: View {
     }
 
     private var timeUntilReset: String? {
-        // MiniMax quota resets every 4 hours at 00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC
+        // MiniMax quota resets at 00:00, 05:00, 10:00, 15:00, 20:00 UTC
         let calendar = Calendar.current
         let now = currentTime // Use the live time state
 
-        // Get current UTC hour
-        var utcComponents = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: now)
-        guard let utcHour = utcComponents.hour else { return nil }
+        // Get current UTC time
+        let utcTimezone = TimeZone(identifier: "UTC")!
+        var utcComponents = calendar.dateComponents(in: utcTimezone, from: now)
+        guard let utcHour = utcComponents.hour,
+              let utcMinute = utcComponents.minute else { return nil }
 
-        // Next reset time (next hour divisible by 4)
-        let nextResetHour = ((utcHour / 4) + 1) * 4
+        // Reset hours: 00:00, 05:00, 10:00, 15:00, 20:00 UTC
+        let resetHours = [0, 5, 10, 15, 20]
+
+        // Find the next reset time
+        var nextResetHour = resetHours.first { $0 > utcHour } ?? resetHours[0]
+
+        // If we've passed the last reset today (20:00), next reset is tomorrow at 00:00
         var nextResetComponents = utcComponents
-        nextResetComponents.hour = nextResetHour == 24 ? 0 : nextResetHour
+        nextResetComponents.hour = nextResetHour
         nextResetComponents.minute = 0
         nextResetComponents.second = 0
 
-        // If next reset is 0, set to next day
-        if nextResetHour == 24 {
+        if nextResetHour <= utcHour {
+            // Next reset is tomorrow
             nextResetComponents.day = (utcComponents.day ?? 0) + 1
-            nextResetComponents.hour = 0
         }
 
         guard let nextReset = calendar.date(from: nextResetComponents),
-              let nextResetUTC = calendar.date(from: calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: nextReset)) else {
+              let nextResetUTC = calendar.date(from: calendar.dateComponents(in: utcTimezone, from: nextReset)) else {
             return nil
         }
 
@@ -231,15 +237,24 @@ struct UsageView: View {
 
     private var resetTimeDescription: String {
         let calendar = Calendar.current
-        let now = Date()
+        let now = currentTime
 
-        var utcComponents = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: now)
+        let utcTimezone = TimeZone(identifier: "UTC")!
+        var utcComponents = calendar.dateComponents(in: utcTimezone, from: now)
         guard let utcHour = utcComponents.hour else { return "" }
 
-        let nextResetHour = ((utcHour / 4) + 1) * 4
-        let resetHour = nextResetHour == 24 ? 0 : nextResetHour
+        // Reset hours: 00:00, 05:00, 10:00, 15:00, 20:00 UTC
+        let resetHours = [0, 5, 10, 15, 20]
 
-        return "@ \(String(format: "%02d:00 UTC", resetHour))"
+        // Find the next reset hour
+        let nextResetHour = resetHours.first { $0 > utcHour } ?? resetHours[0]
+
+        if nextResetHour <= utcHour {
+            // Next reset is tomorrow at 00:00 UTC
+            return "@ 00:00 UTC"
+        } else {
+            return "@ \(String(format: "%02d:00 UTC", nextResetHour))"
+        }
     }
 
     private var usageUsed: String {
