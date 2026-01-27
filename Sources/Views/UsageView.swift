@@ -249,11 +249,31 @@ struct UsageView: View {
         // Find the next reset hour
         let nextResetHour = resetHours.first { $0 > utcHour } ?? resetHours[0]
 
+        // Calculate local time for next reset
+        var resetComponents = utcComponents
+        resetComponents.hour = nextResetHour
+        resetComponents.minute = 0
+        resetComponents.second = 0
+
         if nextResetHour <= utcHour {
-            // Next reset is tomorrow at 00:00 UTC
-            return "@ 00:00 UTC"
+            resetComponents.day = (utcComponents.day ?? 0) + 1
+        }
+
+        guard let resetDate = calendar.date(from: resetComponents),
+              let localDate = calendar.date(from: calendar.dateComponents(in: .current, from: resetDate)) else {
+            return ""
+        }
+
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.timeZone = .current
+
+        let localTimeString = formatter.string(from: localDate)
+
+        if nextResetHour <= utcHour {
+            return "@ \(String(format: "%02d:00 UTC", nextResetHour)) (\(localTimeString))"
         } else {
-            return "@ \(String(format: "%02d:00 UTC", nextResetHour))"
+            return "@ \(String(format: "%02d:00 UTC", nextResetHour)) (\(localTimeString))"
         }
     }
 
