@@ -72,6 +72,24 @@ struct UsageView: View {
 
     private var usageDisplay: some View {
         VStack(spacing: 12) {
+            // Model name
+            if let modelName = usageMonitor.usageData?.modelName {
+                HStack {
+                    Image(systemName: "cpu")
+                        .font(.caption)
+                        .foregroundColor(.cyan)
+                    Text(modelName)
+                        .font(.caption.weight(.medium))
+                        .foregroundColor(.cyan)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(
+                    Capsule()
+                        .fill(Color.cyan.opacity(0.15))
+                )
+            }
+
             // Compact liquid progress
             LiquidProgressView(
                 progress: usageMonitor.usagePercentage,
@@ -85,13 +103,13 @@ struct UsageView: View {
 
             // Stats row
             HStack(spacing: 12) {
-                compactStat(title: "Used", value: usageUsed, icon: "chart.bar.fill", color: .purple)
+                compactStat(title: "Used", value: usageMonitor.formattedUsed, icon: "chart.bar.fill", color: .purple)
                 compactStat(title: "Left", value: usageMonitor.formattedRemaining, icon: "checkmark.circle.fill", color: .cyan)
                 compactStat(title: "Total", value: usageMonitor.formattedTotal, icon: "chart.pie.fill", color: .blue)
             }
 
-            // Reset time
-            resetTimeView
+            // Time remaining
+            timeRemainingView
         }
     }
 
@@ -123,7 +141,7 @@ struct UsageView: View {
 
                 Spacer()
 
-                if let timeRemaining = timeUntilReset {
+                if let timeRemaining = formattedTimeRemaining {
                     HStack(spacing: 4) {
                         Image(systemName: "clock.fill")
                             .font(.caption2)
@@ -159,19 +177,19 @@ struct UsageView: View {
         )
     }
 
-    private var resetTimeView: some View {
+    private var timeRemainingView: some View {
         HStack {
-            Image(systemName: "arrow.clockwise")
+            Image(systemName: "clock.fill")
                 .font(.caption2)
                 .foregroundColor(.cyan)
 
-            Text("Resets in: \(timeUntilReset ?? "—")")
+            Text("Resets in: \(formattedTimeRemaining ?? "—")")
                 .font(.caption2.weight(.medium).monospacedDigit())
                 .foregroundColor(.white.opacity(0.7))
 
             Spacer()
 
-            Text(resetTimeDescription)
+            Text(intervalEndDescription)
                 .font(.caption2)
                 .foregroundColor(.white.opacity(0.5))
         }
@@ -183,48 +201,13 @@ struct UsageView: View {
         )
     }
 
-    private var timeUntilReset: String? {
-        // MiniMax quota resets at 00:00, 05:00, 10:00, 15:00, 20:00 UTC
-        let calendar = Calendar.current
-        let now = currentTime // Use the live time state
+    private var formattedTimeRemaining: String? {
+        guard let remainingSeconds = usageMonitor.usageData?.remainingTimeSeconds,
+              remainingSeconds > 0 else { return nil }
 
-        // Get current UTC time
-        let utcTimezone = TimeZone(identifier: "UTC")!
-        var utcComponents = calendar.dateComponents(in: utcTimezone, from: now)
-        guard let utcHour = utcComponents.hour,
-              let utcMinute = utcComponents.minute else { return nil }
-
-        // Reset hours: 00:00, 05:00, 10:00, 15:00, 20:00 UTC
-        let resetHours = [0, 5, 10, 15, 20]
-
-        // Find the next reset time
-        var nextResetHour = resetHours.first { $0 > utcHour } ?? resetHours[0]
-
-        // If we've passed the last reset today (20:00), next reset is tomorrow at 00:00
-        var nextResetComponents = utcComponents
-        nextResetComponents.hour = nextResetHour
-        nextResetComponents.minute = 0
-        nextResetComponents.second = 0
-
-        if nextResetHour <= utcHour {
-            // Next reset is tomorrow
-            nextResetComponents.day = (utcComponents.day ?? 0) + 1
-        }
-
-        guard let nextReset = calendar.date(from: nextResetComponents),
-              let nextResetUTC = calendar.date(from: calendar.dateComponents(in: utcTimezone, from: nextReset)) else {
-            return nil
-        }
-
-        let timeInterval = nextResetUTC.timeIntervalSince(now)
-
-        if timeInterval <= 0 {
-            return "0h 0m"
-        }
-
-        let hours = Int(timeInterval) / 3600
-        let minutes = (Int(timeInterval) % 3600) / 60
-        let seconds = Int(timeInterval) % 60
+        let hours = remainingSeconds / 3600
+        let minutes = (remainingSeconds % 3600) / 60
+        let seconds = remainingSeconds % 60
 
         if hours > 0 {
             return "\(hours)h \(minutes)m"
@@ -235,52 +218,15 @@ struct UsageView: View {
         }
     }
 
-    private var resetTimeDescription: String {
-        let calendar = Calendar.current
-        let now = currentTime
+    private var intervalEndDescription: String {
+        guard let endTimeMs = usageMonitor.usageData?.endTimeMs else { return "" }
 
-        let utcTimezone = TimeZone(identifier: "UTC")!
-        var utcComponents = calendar.dateComponents(in: utcTimezone, from: now)
-        guard let utcHour = utcComponents.hour else { return "" }
-
-        // Reset hours: 00:00, 05:00, 10:00, 15:00, 20:00 UTC
-        let resetHours = [0, 5, 10, 15, 20]
-
-        // Find the next reset hour
-        let nextResetHour = resetHours.first { $0 > utcHour } ?? resetHours[0]
-
-        // Calculate local time for next reset
-        var resetComponents = utcComponents
-        resetComponents.hour = nextResetHour
-        resetComponents.minute = 0
-        resetComponents.second = 0
-
-        if nextResetHour <= utcHour {
-            resetComponents.day = (utcComponents.day ?? 0) + 1
-        }
-
-        guard let resetDate = calendar.date(from: resetComponents),
-              let localDate = calendar.date(from: calendar.dateComponents(in: .current, from: resetDate)) else {
-            return ""
-        }
-
+        let endDate = Date(timeIntervalSince1970: Double(endTimeMs) / 1000.0)
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         formatter.timeZone = .current
 
-        let localTimeString = formatter.string(from: localDate)
-
-        if nextResetHour <= utcHour {
-            return "@ \(String(format: "%02d:00 UTC", nextResetHour)) (\(localTimeString))"
-        } else {
-            return "@ \(String(format: "%02d:00 UTC", nextResetHour)) (\(localTimeString))"
-        }
-    }
-
-    private var usageUsed: String {
-        guard let data = usageMonitor.usageData else { return "—" }
-        let used = data.total - data.remains
-        return formatNumber(used)
+        return "@ \(formatter.string(from: endDate))"
     }
 
     private func formatNumber(_ number: Int) -> String {

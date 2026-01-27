@@ -71,9 +71,13 @@ final class UsageMonitor: ObservableObject {
         let remains = total - used
 
         self.usageData = UsageData(
-            remains: remains,
-            total: total,
-            lastUpdated: ISO8601DateFormatter().string(from: Date())
+            totalCount: total,
+            usedCount: used,
+            remainingCount: remains,
+            remainingTimeMs: 3600000, // 1 hour demo
+            startTimeMs: Int64(Date().timeIntervalSince1970 * 1000),
+            endTimeMs: Int64((Date().timeIntervalSince1970 + 3600) * 1000),
+            modelName: "Demo Model"
         )
         self.lastUpdated = Date()
         self.error = nil
@@ -97,18 +101,26 @@ final class UsageMonitor: ObservableObject {
     }
 
     var usagePercentage: Double {
-        guard let data = usageData, data.total > 0 else { return 0 }
-        return Double(data.remains) / Double(data.total)
+        usageData?.usagePercentage ?? 0
     }
 
     var formattedRemaining: String {
         guard let data = usageData else { return "Unknown" }
-        return formatNumber(data.remains)
+        return formatNumber(data.remainingCount)
     }
 
     var formattedTotal: String {
         guard let data = usageData else { return "Unknown" }
-        return formatNumber(data.total)
+        return formatNumber(data.totalCount)
+    }
+
+    var formattedUsed: String {
+        guard let data = usageData else { return "—" }
+        return formatNumber(data.usedCount)
+    }
+
+    var modelName: String {
+        usageData?.modelName ?? "Unknown"
     }
 
     private func formatNumber(_ number: Int) -> String {

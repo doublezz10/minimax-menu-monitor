@@ -31,6 +31,7 @@ struct SettingsView: View {
             refreshSection
             demoModeToggle
             refreshButton
+            quitButton
             statusMessage
         }
         .padding()
@@ -185,6 +186,26 @@ struct SettingsView: View {
                 )
             )
             .cornerRadius(10)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+
+    private var quitButton: some View {
+        Button(action: {
+            NSApplication.shared.terminate(nil)
+        }) {
+            HStack {
+                Image(systemName: "xmark.circle")
+                Text("Quit App")
+            }
+            .font(.subheadline.weight(.medium))
+            .foregroundColor(.white.opacity(0.8))
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+            )
         }
         .buttonStyle(PlainButtonStyle())
     }

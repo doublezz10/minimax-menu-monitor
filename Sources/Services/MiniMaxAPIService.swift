@@ -26,7 +26,7 @@ enum APIError: Error, LocalizedError {
 final class MiniMaxAPIService {
     static let shared = MiniMaxAPIService()
 
-    private let baseURL = "https://www.minimaxi.io/v1/api/openplatform/coding_plan/remains"
+    private let baseURL = "https://www.minimax.io/v1/api/openplatform/coding_plan/remains"
     private let session: URLSession
 
     private init() {
@@ -57,8 +57,25 @@ final class MiniMaxAPIService {
             do {
                 let decoder = JSONDecoder()
                 let usageResponse = try decoder.decode(UsageResponse.self, from: data)
-                if usageResponse.code == 0, let usageData = usageResponse.data {
-                    return usageData
+
+                // Check if response indicates success
+                if usageResponse.baseResp?.statusCode == 0,
+                   let modelRemains = usageResponse.modelRemains,
+                   let firstModel = modelRemains.first {
+                    // Note: current_interval_usage_count contains REMAINING count (bad naming in API)
+                    let totalCount = firstModel.currentIntervalTotalCount
+                    let remainingCount = firstModel.currentIntervalUsageCount
+                    let usedCount = totalCount - remainingCount
+
+                    return UsageData(
+                        totalCount: totalCount,
+                        usedCount: usedCount,
+                        remainingCount: remainingCount,
+                        remainingTimeMs: firstModel.remainsTime,
+                        startTimeMs: firstModel.startTime,
+                        endTimeMs: firstModel.endTime,
+                        modelName: firstModel.modelName
+                    )
                 } else {
                     throw APIError.noData
                 }
