@@ -14,7 +14,7 @@ A beautiful native macOS menu bar app that tracks your MiniMax API usage with a 
 - 📊 **Real-time Tracking** - Monitors your MiniMax API usage
 - 🔒 **Secure Storage** - API keys stored safely in macOS Keychain
 - ⚙️ **Customizable** - Configure refresh intervals and preferences
-- 🚀 **Easy Setup** - First-launch configuration wizard
+- 🚀 **Quick Setup** - Enter your API key directly in the app's settings
 
 ## Installation
 
@@ -53,7 +53,7 @@ open build/Debug/MinimaxMenuMonitor.app
 2. Sign in to your account
 3. Navigate to API settings
 4. Generate a new API key
-5. Enter it in the app's first-launch setup window
+5. Open the app and enter it in Settings (opens automatically on first launch)
 
 ## Usage
 
@@ -67,6 +67,10 @@ The icon in your menu bar shows your usage percentage:
 | 🟡 Amber | 50-80% | Moderate usage |
 | 🔴 Red | 80-100% | High usage |
 
+### First Launch
+
+On first launch, the app opens directly to **Settings** where you can enter your MiniMax API key. Once configured, you'll automatically see the **Usage** view with your token usage.
+
 ### Popover
 
 Click the menu bar icon to view:
@@ -79,7 +83,7 @@ Click the menu bar icon to view:
 
 Access settings by clicking the gear icon:
 
-- **Change API Key** - Update your MiniMax credentials
+- **API Key** - Enter or update your MiniMax credentials
 - **Refresh Interval** - How often to check usage (10-300 seconds)
 - **Quit App** - Exit the application
 

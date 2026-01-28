@@ -44,7 +44,7 @@ struct ContentView: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("App logo: M M M")
             
-            // Center: Model indicator - slightly larger
+            // Center: Model indicator - slightly larger, centered
             HStack(spacing: 2) {
                 Image(systemName: "cpu")
                     .font(.system(size: 10))
@@ -61,6 +61,7 @@ struct ContentView: View {
             }
             .padding(.horizontal, 7)
             .padding(.vertical, 4)
+            .frame(maxWidth: .infinity) // Center content in capsule
             .background(
                 Capsule()
                     .fill(Color.cardBackground)
