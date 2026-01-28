@@ -23,16 +23,9 @@ A beautiful native macOS menu bar app that tracks your MiniMax API usage with a 
 
 ## Installation
 
-### Option 1: Download (Recommended)
+### Build from Source (Recommended)
 
-1. Download the latest release from [GitHub Releases](https://github.com/doublezz10/minimax-menu-monitor/releases)
-2. Extract the `.zip` file
-3. Drag `MinimaxMenuMonitor.app` to your Applications folder
-4. Double-click to launch
-
-> **Note**: On first launch, you may need to right-click and select "Open" if Gatekeeper blocks the app.
-
-### Option 2: Build from Source
+Since this is an unsigned app without a paid Apple Developer account:
 
 ```bash
 # Clone the repository
@@ -47,10 +40,22 @@ chmod +x setup.sh
 open build/Debug/MinimaxMenuMonitor.app
 ```
 
+**First Launch:**
+1. After running `./setup.sh`, the app will be built
+2. On first launch, right-click the app and select "Open"
+3. The app will open in your menu bar
+4. Click the icon to open the popover, enter your MiniMax API key in Settings
+
 **Requirements:**
 - macOS 12.0 (Monterey) or later
 - Xcode Command Line Tools (`xcode-select --install`)
 - Homebrew (for XcodeGen)
+
+### Future: Signed Releases
+
+Signed `.app` bundles with automatic Gatekeeper approval require a paid Apple Developer Account ($99/year). This may be added in a future release.
+
+For now, building from source is the recommended approach.
 
 ## Getting Your MiniMax API Key
 
