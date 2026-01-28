@@ -8,8 +8,8 @@ struct LiquidProgressView: View {
     @State private var waveOffset: CGFloat = 0
     @State private var animatedProgress: Double = 0
 
-    private let waveSpeed: CGFloat = 2
-    private let waveAmplitude: CGFloat = 8
+    private let waveSpeed: CGFloat = 4
+    private let waveAmplitude: CGFloat = 6
 
     var body: some View {
         GeometryReader { geometry in
@@ -35,10 +35,13 @@ struct LiquidProgressView: View {
             .clipShape(RoundedRectangle(cornerRadius: 20))
         }
         .onAppear {
-            withAnimation(.easeOut(duration: 1.0)) {
+            withAnimation(.easeOut(duration: 1.2)) {
                 animatedProgress = progress
             }
-            startWaveAnimation()
+            // Start wave animation after progress fills in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                startWaveAnimation()
+            }
         }
         .onChange(of: progress) { newValue in
             withAnimation(.easeOut(duration: 0.8)) {
@@ -105,8 +108,9 @@ struct LiquidProgressView: View {
     }
 
     private func startWaveAnimation() {
-        withAnimation(.linear(duration: 3.0).repeatForever(autoreverses: false)) {
-            waveOffset = .pi * 4
+        // Gentle, natural wave motion - slow with subtle back-and-forth
+        withAnimation(.easeInOut(duration: 4.0).repeatForever(autoreverses: true)) {
+            waveOffset = .pi * 2
         }
     }
 }
