@@ -4,9 +4,9 @@ A beautiful native macOS menu bar app that tracks your MiniMax API usage with a 
 
 <table>
   <tr>
-    <td><img src="Resources/menu-bar-icon.png" width="100"></td>
-    <td><img src="Resources/screenshot-usage.png" width="140"></td>
-    <td><img src="Resources/screenshot-settings.png" width="140"></td>
+    <td><img src="Resources/menu-bar-icon.png" width="175"></td>
+    <td><img src="Resources/screenshot-usage.png" width="245"></td>
+    <td><img src="Resources/screenshot-settings.png" width="245"></td>
   </tr>
 </table>
 
