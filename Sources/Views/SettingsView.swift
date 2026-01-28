@@ -33,7 +33,7 @@ struct SettingsView: View {
             quitButton
             statusMessage
         }
-        .padding()
+        .padding(16)
         .onAppear {
             loadSettings()
         }
@@ -43,7 +43,8 @@ struct SettingsView: View {
         HStack {
             Button(action: onBack) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.white.opacity(0.8))
+                    .font(.subheadline.weight(.medium))
+                    .foregroundColor(.textSecondary)
                     .frame(width: 32, height: 32)
             }
             .buttonStyle(PlainButtonStyle())
@@ -68,28 +69,28 @@ struct SettingsView: View {
     private var currentKeyInfo: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("API Key")
-                .font(.caption.weight(.medium))
-                .foregroundColor(.white.opacity(0.6))
+                .font(.caption)
+                .foregroundColor(.textTertiary)
 
             HStack {
                 Image(systemName: "key.fill")
-                    .foregroundColor(.cyan)
+                    .foregroundColor(.neonCyan)
 
                 Text("Configured")
                     .font(.caption.weight(.medium))
-                    .foregroundColor(.cyan)
+                    .foregroundColor(.neonCyan)
 
                 Spacer()
 
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
+                    .foregroundColor(.success)
             }
         }
         .padding(12)
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color.cyan.opacity(0.1))
+                .fill(Color.neonCyan.opacity(0.1))
         )
     }
 
@@ -101,14 +102,14 @@ struct SettingsView: View {
                     Text("Change")
                 }
                 .font(.caption.weight(.medium))
-                .foregroundColor(.white)
+                .foregroundColor(.textPrimary)
             }
         }
         .frame(width: 80)
         .buttonStyle(PlainButtonStyle())
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                .stroke(Color.glassBorder, lineWidth: 1)
         )
     }
 
@@ -117,13 +118,13 @@ struct SettingsView: View {
             HStack {
                 Text("Refresh Interval")
                     .font(.subheadline.weight(.medium))
-                    .foregroundColor(.white.opacity(0.9))
+                    .foregroundColor(.textPrimary)
 
                 Spacer()
 
                 Text("\(Int(refreshInterval))s")
                     .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.7))
+                    .foregroundColor(.textSecondary)
             }
 
             Slider(
@@ -131,7 +132,7 @@ struct SettingsView: View {
                 in: 10...300,
                 step: 10
             )
-            .tint(.white.opacity(0.8))
+            .tint(.textPrimary.opacity(0.8))
             .onChange(of: refreshInterval) { _ in
                 Settings.shared.refreshInterval = refreshInterval
             }
@@ -149,12 +150,12 @@ struct SettingsView: View {
                 Text("Refresh Now")
             }
             .font(.subheadline.weight(.medium))
-            .foregroundColor(.white)
+            .foregroundColor(.textPrimary)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
             .background(
                 LinearGradient(
-                    colors: [Color.purple, Color.blue],
+                    colors: [Color.neonPurple, Color.neonBlue],
                     startPoint: .leading,
                     endPoint: .trailing
                 )
@@ -173,12 +174,12 @@ struct SettingsView: View {
                 Text("Quit App")
             }
             .font(.subheadline.weight(.medium))
-            .foregroundColor(.white.opacity(0.8))
+            .foregroundColor(.textSecondary)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 10)
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                    .stroke(Color.glassBorder, lineWidth: 1)
             )
         }
         .buttonStyle(PlainButtonStyle())
@@ -190,11 +191,11 @@ struct SettingsView: View {
             case .saved:
                 Text("Settings saved successfully!")
                     .font(.caption)
-                    .foregroundColor(.green)
+                    .foregroundColor(.success)
             case .error(let message):
                 Text(message)
                     .font(.caption)
-                    .foregroundColor(.red)
+                    .foregroundColor(.error)
             default:
                 EmptyView()
             }

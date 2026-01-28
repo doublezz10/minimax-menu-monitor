@@ -141,53 +141,94 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         image.lockFocus()
 
-        // Black border for visibility on light backgrounds
-        let borderCircle = NSBezierPath(ovalIn: NSRect(x: 0, y: 0, width: 18, height: 18))
-        NSColor.black.setStroke()
-        borderCircle.lineWidth = 1.5
-        borderCircle.stroke()
+        // Apple-native design: thin ring without heavy black border
+        // Subtle shadow provides contrast on all backgrounds
 
-        // Background circle (semi-transparent white)
+        // Background circle (subtle, adaptive)
         let backgroundCircle = NSBezierPath(ovalIn: NSRect(x: 1, y: 1, width: 16, height: 16))
-        NSColor.white.withAlphaComponent(0.2).setFill()
+        NSColor.white.withAlphaComponent(0.15).setFill()
         backgroundCircle.fill()
 
-        // Usage circle (fills based on percentage)
-        let usageAngle = 90 - (360 * percentage)
-        let usageCircle = NSBezierPath()
-        usageCircle.move(to: NSPoint(x: 9, y: 9))
-        usageCircle.appendArc(
-            withCenter: NSPoint(x: 9, y: 9),
-            radius: 8,
-            startAngle: 90,
-            endAngle: usageAngle,
-            clockwise: true
-        )
-        usageCircle.close()
+        // Usage arc (thin ring, Apple-style)
+        // Using arc instead of pie slice for cleaner look
+        let radius: CGFloat = 7
+        let center = NSPoint(x: 9, y: 9)
 
-        // Color based on usage (cyan -> yellow -> red for better visibility)
-        let color: NSColor
-        if percentage < 0.5 {
-            color = .cyan
-        } else if percentage < 0.8 {
-            color = .systemYellow
-        } else {
-            color = .systemRed
+        // Background ring (track)
+        let trackCircle = NSBezierPath(ovalIn: NSRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2))
+        NSColor.white.withAlphaComponent(0.2).setStroke()
+        trackCircle.lineWidth = 1.5
+        trackCircle.stroke()
+
+        // Usage arc (fills clockwise from top)
+        if percentage > 0 {
+            let startAngle: CGFloat = -90  // Top (12 o'clock)
+            let endAngle: CGFloat = -90 + (360 * CGFloat(percentage))
+
+            let usageArc = NSBezierPath()
+            usageArc.appendArc(
+                withCenter: center,
+                radius: radius,
+                startAngle: startAngle,
+                endAngle: endAngle,
+                clockwise: false
+            )
+            usageArc.lineWidth = 1.5
+            usageArc.lineCapStyle = .round
+
+            // Color based on usage level (subtle neon palette)
+            let color: NSColor
+            if percentage < 0.5 {
+                // Low usage: subtle cyan/teal
+                color = NSColor(red: 0.0, green: 0.8, blue: 0.7, alpha: 0.85)
+            } else if percentage < 0.8 {
+                // Medium usage: subtle amber
+                color = NSColor(red: 1.0, green: 0.7, blue: 0.2, alpha: 0.85)
+            } else {
+                // High usage: subtle coral/red
+                color = NSColor(red: 1.0, green: 0.3, blue: 0.3, alpha: 0.85)
+            }
+
+            color.setStroke()
+            usageArc.stroke()
         }
 
-        color.withAlphaComponent(0.9).setFill()
-        usageCircle.fill()
-
-        // Loading indicator
+        // Loading indicator: SF Symbol-style rotation arrow
         if isLoading {
-            let loadingCircle = NSBezierPath(ovalIn: NSRect(x: 3, y: 3, width: 12, height: 12))
-            NSColor.white.withAlphaComponent(0.6).setStroke()
-            loadingCircle.lineWidth = 1
-            loadingCircle.stroke()
+            let loadingPath = NSBezierPath()
+            // Draw a small circular arrow
+            let arrowCenter = NSPoint(x: 9, y: 9)
+            let arrowRadius: CGFloat = 4
+
+            // Arc portion
+            loadingPath.appendArc(
+                withCenter: arrowCenter,
+                radius: arrowRadius,
+                startAngle: 45,
+                endAngle: 315,
+                clockwise: true
+            )
+
+            // Arrow head
+            let arrowHeadSize: CGFloat = 2.5
+            let headPoint = NSPoint(
+                x: arrowCenter.x + arrowRadius * cos(.pi / 4),
+                y: arrowCenter.y + arrowRadius * sin(.pi / 4)
+            )
+
+            loadingPath.move(to: NSPoint(x: headPoint.x - arrowHeadSize, y: headPoint.y - arrowHeadSize))
+            loadingPath.line(to: headPoint)
+            loadingPath.line(to: NSPoint(x: headPoint.x - arrowHeadSize, y: headPoint.y + arrowHeadSize))
+
+            NSColor.white.withAlphaComponent(0.7).setStroke()
+            loadingPath.lineWidth = 1
+            loadingPath.stroke()
         }
 
         image.unlockFocus()
-        image.isTemplate = false
+
+        // Enable template mode for proper dark/light adaptation
+        image.isTemplate = true
 
         return image
     }

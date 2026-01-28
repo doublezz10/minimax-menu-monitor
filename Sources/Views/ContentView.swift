@@ -12,7 +12,7 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 headerView
                 Divider()
-                    .background(Color.white.opacity(0.2))
+                    .background(Color.glassBorder)
                 if showSettings {
                     SettingsView(onBack: { showSettings = false })
                 } else {
@@ -31,7 +31,8 @@ struct ContentView: View {
             Spacer()
             Button(action: { showSettings.toggle() }) {
                 Image(systemName: showSettings ? "chart.bar.fill" : "gearshape.fill")
-                    .foregroundColor(.white.opacity(0.8))
+                    .font(.subheadline)
+                    .foregroundColor(.textSecondary)
             }
             .buttonStyle(PlainButtonStyle())
             .padding(8)

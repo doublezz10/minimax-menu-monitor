@@ -29,11 +29,11 @@ struct UsageView: View {
     private var loadingView: some View {
         VStack(spacing: 12) {
             ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                .progressViewStyle(CircularProgressViewStyle(tint: .textPrimary))
                 .scaleEffect(1.2)
             Text("Loading...")
                 .font(.caption)
-                .foregroundColor(.white.opacity(0.8))
+                .foregroundColor(.textSecondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -41,16 +41,16 @@ struct UsageView: View {
     private func errorView(_ error: Error) -> some View {
         VStack(spacing: 12) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 32))
-                .foregroundColor(.orange)
+                .font(.title)
+                .foregroundColor(.warning)
 
             Text("Error")
                 .font(.subheadline.weight(.medium))
-                .foregroundColor(.white)
+                .foregroundColor(.textPrimary)
 
             Text(error.localizedDescription)
                 .font(.caption)
-                .foregroundColor(.white.opacity(0.7))
+                .foregroundColor(.textSecondary)
                 .multilineTextAlignment(.center)
 
             Button(action: {
@@ -60,10 +60,10 @@ struct UsageView: View {
             }) {
                 Text("Retry")
                     .font(.caption.weight(.medium))
-                    .foregroundColor(.white)
+                    .foregroundColor(.textPrimary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
-                    .background(Color.purple)
+                    .background(Color.neonPurple)
                     .cornerRadius(12)
             }
         }
@@ -77,16 +77,16 @@ struct UsageView: View {
                 HStack {
                     Image(systemName: "cpu")
                         .font(.caption)
-                        .foregroundColor(.cyan)
+                        .foregroundColor(.neonCyan)
                     Text(modelName)
                         .font(.caption.weight(.medium))
-                        .foregroundColor(.cyan)
+                        .foregroundColor(.neonCyan)
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
                 .background(
                     Capsule()
-                        .fill(Color.cyan.opacity(0.15))
+                        .fill(Color.neonCyan.opacity(0.15))
                 )
             }
 
@@ -103,9 +103,9 @@ struct UsageView: View {
 
             // Stats row
             HStack(spacing: 12) {
-                compactStat(title: "Used", value: usageMonitor.formattedUsed, icon: "chart.bar.fill", color: .purple)
-                compactStat(title: "Left", value: usageMonitor.formattedRemaining, icon: "checkmark.circle.fill", color: .cyan)
-                compactStat(title: "Total", value: usageMonitor.formattedTotal, icon: "chart.pie.fill", color: .blue)
+                compactStat(title: "Used", value: usageMonitor.formattedUsed, icon: "chart.bar.fill", color: .neonPurple)
+                compactStat(title: "Left", value: usageMonitor.formattedRemaining, icon: "checkmark.circle.fill", color: .neonCyan)
+                compactStat(title: "Total", value: usageMonitor.formattedTotal, icon: "chart.pie.fill", color: .neonBlue)
             }
 
             // Time remaining
@@ -118,13 +118,13 @@ struct UsageView: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(Color.white.opacity(0.1))
+                        .fill(Color.textPrimary.opacity(0.1))
                         .frame(height: 6)
 
                     RoundedRectangle(cornerRadius: 3)
                         .fill(
                             LinearGradient(
-                                colors: [Color.purple, Color.blue],
+                                colors: [Color.neonPurple, Color.neonBlue],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -136,19 +136,19 @@ struct UsageView: View {
 
             HStack {
                 Text("\(Int(usageMonitor.usagePercentage * 100))%")
-                    .font(.caption2.weight(.medium))
-                    .foregroundColor(.white.opacity(0.6))
+                    .font(AppFont.small.weight(.medium))
+                    .foregroundColor(.textTertiary)
 
                 Spacer()
 
                 if let timeRemaining = formattedTimeRemaining {
                     HStack(spacing: 4) {
                         Image(systemName: "clock.fill")
-                            .font(.caption2)
+                            .font(AppFont.small)
                         Text(timeRemaining)
                     }
-                    .font(.caption2.weight(.medium).monospacedDigit())
-                    .foregroundColor(.cyan)
+                    .font(AppFont.small.weight(.medium).monospacedDigit())
+                    .foregroundColor(.neonCyan)
                 }
             }
         }
@@ -158,46 +158,46 @@ struct UsageView: View {
     private func compactStat(title: String, value: String, icon: String, color: Color) -> some View {
         VStack(spacing: 4) {
             Image(systemName: icon)
-                .font(.system(size: 12))
+                .font(.caption)
                 .foregroundColor(color)
 
             Text(value)
-                .font(.system(size: 14, weight: .bold, design: .rounded))
-                .foregroundColor(.white)
+                .font(.body.weight(.bold))
+                .foregroundColor(.textPrimary)
 
             Text(title)
-                .font(.caption2)
-                .foregroundColor(.white.opacity(0.5))
+                .font(AppFont.small)
+                .foregroundColor(.textTertiary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 8)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .fill(Color.white.opacity(0.08))
+                .fill(Color.cardBackground)
         )
     }
 
     private var timeRemainingView: some View {
         HStack {
             Image(systemName: "clock.fill")
-                .font(.caption2)
-                .foregroundColor(.cyan)
+                .font(AppFont.small)
+                .foregroundColor(.neonCyan)
 
             Text("Resets in: \(formattedTimeRemaining ?? "—")")
-                .font(.caption2.weight(.medium).monospacedDigit())
-                .foregroundColor(.white.opacity(0.7))
+                .font(AppFont.small.weight(.medium).monospacedDigit())
+                .foregroundColor(.textSecondary)
 
             Spacer()
 
             Text(intervalEndDescription)
-                .font(.caption2)
-                .foregroundColor(.white.opacity(0.5))
+                .font(AppFont.small)
+                .foregroundColor(.textTertiary)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 6)
         .background(
             Capsule()
-                .fill(Color.cyan.opacity(0.1))
+                .fill(Color.neonCyan.opacity(0.1))
         )
     }
 
@@ -229,29 +229,19 @@ struct UsageView: View {
         return "@ \(formatter.string(from: endDate))"
     }
 
-    private func formatNumber(_ number: Int) -> String {
-        if number >= 1_000_000 {
-            return String(format: "%.1fM", Double(number) / 1_000_000)
-        } else if number >= 1_000 {
-            return String(format: "%.1fK", Double(number) / 1_000)
-        } else {
-            return "\(number)"
-        }
-    }
-
     private var emptyStateView: some View {
         VStack(spacing: 12) {
             Image(systemName: "key.fill")
-                .font(.system(size: 32))
-                .foregroundColor(.white.opacity(0.6))
+                .font(.title)
+                .foregroundColor(.textTertiary)
 
             Text("No API Key")
                 .font(.subheadline.weight(.medium))
-                .foregroundColor(.white)
+                .foregroundColor(.textPrimary)
 
             Text("Add your key in settings")
                 .font(.caption)
-                .foregroundColor(.white.opacity(0.6))
+                .foregroundColor(.textSecondary)
         }
         .padding()
     }
