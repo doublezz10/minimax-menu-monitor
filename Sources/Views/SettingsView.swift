@@ -29,6 +29,7 @@ struct SettingsView: View {
             apiKeySection
             refreshSection
             refreshButton
+            linksSection
             quitButton
             Spacer()
             statusMessage
@@ -40,6 +41,32 @@ struct SettingsView: View {
         .onAppear {
             loadSettings()
         }
+    }
+    
+    private let githubIssuesURL = URL(string: "https://github.com/doublezz10/minimax-menu-monitor/issues")!
+    private let minimaxUsageURL = URL(string: "https://platform.minimax.io/user-center/payment/coding-plan")!
+    
+    private var linksSection: some View {
+        HStack(spacing: 16) {
+            Link(destination: githubIssuesURL) {
+                HStack(spacing: 4) {
+                    Image(systemName: "exclamationmark.bubble")
+                    Text("Report Issue")
+                }
+                .font(.caption)
+                .foregroundColor(.textTertiary)
+            }
+            
+            Link(destination: minimaxUsageURL) {
+                HStack(spacing: 4) {
+                    Image(systemName: "creditcard")
+                    Text("Manage Subscription")
+                }
+                .font(.caption)
+                .foregroundColor(.textTertiary)
+            }
+        }
+        .padding(.top, 4)
     }
 
     private var apiKeySection: some View {

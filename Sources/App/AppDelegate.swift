@@ -25,35 +25,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupContextMenu() {
         contextMenu = NSMenu()
         
-        // Report Issue - no shortcut
-        let reportIssueItem = NSMenuItem(title: "Report Issue", action: #selector(reportIssue), keyEquivalent: "")
-        reportIssueItem.target = self
-        
-        // View MiniMax Usage - no shortcut (opens external site)
-        let viewUsageItem = NSMenuItem(title: "View MiniMax Usage", action: #selector(viewUsage), keyEquivalent: "")
-        viewUsageItem.target = self
-        
-        // Divider
-        let dividerItem = NSMenuItem.separator()
-        
         // Refresh - Cmd+R
         let refreshItem = NSMenuItem(title: "Refresh Usage", action: #selector(refreshUsage), keyEquivalent: "r")
         refreshItem.keyEquivalentModifierMask = [.command]
         refreshItem.target = self
         
         // Divider
-        let dividerItem2 = NSMenuItem.separator()
+        let dividerItem = NSMenuItem.separator()
         
         // Quit - Cmd+Q (standard macOS shortcut)
         let quitItem = NSMenuItem(title: "Quit App", action: #selector(quitApp), keyEquivalent: "q")
         quitItem.keyEquivalentModifierMask = [.command]
         quitItem.target = self
         
-        contextMenu.addItem(reportIssueItem)
-        contextMenu.addItem(viewUsageItem)
-        contextMenu.addItem(dividerItem)
         contextMenu.addItem(refreshItem)
-        contextMenu.addItem(dividerItem2)
+        contextMenu.addItem(dividerItem)
         contextMenu.addItem(quitItem)
     }
     
