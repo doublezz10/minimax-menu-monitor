@@ -19,8 +19,8 @@ struct UsageView: View {
         .padding(16)
         .frame(width: 300)
         .onAppear {
-            // Update time every second for live countdown
-            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            // Update time every 10 seconds for live countdown (optimized from 1 second)
+            Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
                 currentTime = Date()
             }
         }

@@ -1,174 +1,186 @@
 # MiniMax Menu Monitor
 
-A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a stunning liquid glass interface.
+A beautiful native macOS menu bar app that tracks your MiniMax API usage with a stunning liquid glass interface.
 
-> **Disclaimer**: This project is not affiliated with, endorsed by, or in any way officially connected to MiniMax. All MiniMax-related features are for user convenience only.
+![Menu Bar Icon](docs/screenshot-menu-bar.png)
+![Usage Popover](docs/screenshot-popover.png)
+
+> **Disclaimer**: This project is not affiliated with, endorsed by, or officially connected to MiniMax.
 
 ## Features
 
-- 🍏 **Native MacOS Menu Bar App** - Runs quietly in your menu bar
-- ✨ **Liquid Glass Interface** - Stunning frosted glass design with smooth animations
-- 📊 **Real-time Usage Tracking** - Monitors your MiniMax coding plan usage
-- 🔒 **Secure API Key Storage** - Uses macOS Keychain for safe credential storage
-- ⚙️ **Customizable Settings** - Configure refresh intervals and preferences
-- 🚀 **First-Launch Setup** - Easy API key entry via setup window
+- 🍏 **Native macOS App** - Runs quietly in your menu bar
+- ✨ **Liquid Glass Design** - Stunning frosted glass UI with smooth animations
+- 📊 **Real-time Tracking** - Monitors your MiniMax API usage
+- 🔒 **Secure Storage** - API keys stored safely in macOS Keychain
+- ⚙️ **Customizable** - Configure refresh intervals and preferences
+- 🚀 **Easy Setup** - First-launch configuration wizard
 
 ## Installation
 
-### Prerequisites
+### Option 1: Download (Recommended)
 
+1. Download the latest release from [GitHub Releases](https://github.com/doublezz10/minimax-menu-monitor/releases)
+2. Extract the `.zip` file
+3. Drag `MinimaxMenuMonitor.app` to your Applications folder
+4. Double-click to launch
+
+> **Note**: On first launch, you may need to right-click and select "Open" if Gatekeeper blocks the app.
+
+### Option 2: Build from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/doublezz10/minimax-menu-monitor.git
+cd minimax-menu-monitor
+
+# Run setup script
+chmod +x setup.sh
+./setup.sh
+
+# Launch the app
+open build/Debug/MinimaxMenuMonitor.app
+```
+
+**Requirements:**
 - macOS 12.0 (Monterey) or later
-- Xcode Command Line Tools (installed via `xcode-select --install`)
-- Homebrew (for XcodeGen installation)
+- Xcode Command Line Tools (`xcode-select --install`)
+- Homebrew (for XcodeGen)
 
-### Setup
+## Getting Your MiniMax API Key
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/doublezz10/minimax-menu-monitor.git
-   cd minimax-menu-monitor
-   ```
-
-2. **Run the setup script**
-   ```bash
-   ./setup.sh
-   ```
-
-   The setup script will:
-   - Install XcodeGen if not present
-   - Generate the Xcode project
-   - Build the app
-
-3. **Run the app**
-   ```bash
-   open build/Debug/MinimaxMenuMonitor.app
-   ```
-
-4. **First Launch Setup**
-   - On first launch, a setup window will appear
-   - Enter your MiniMax API key
-   - Click "Continue" to start tracking!
-
-### Getting Your MiniMax API Key
-
-1. Visit [MiniMax Platform](https://platform.minimaxi.com)
+1. Visit [MiniMax Platform](https://platform.minimax.io)
 2. Sign in to your account
 3. Navigate to API settings
 4. Generate a new API key
-5. Enter it in the first-launch setup window
+5. Enter it in the app's first-launch setup window
 
-## Settings
+## Usage
 
-After launching the app, click the menu bar icon and select "Settings" to configure:
-- Change API key (opens setup window)
-- Refresh interval
-- Quit the app
+### Menu Bar Icon
+
+The icon in your menu bar shows your usage percentage:
+
+| Color | Usage | Meaning |
+|-------|-------|---------|
+| 🟢 Cyan | 0-50% | Healthy usage |
+| 🟡 Amber | 50-80% | Moderate usage |
+| 🔴 Red | 80-100% | High usage |
+
+### Popover
+
+Click the menu bar icon to view:
+- Usage percentage with animated progress ring
+- Used / Total / Remaining tokens
+- Time until quota resets
+- Quick actions (Refresh, Settings)
+
+### Settings
+
+Access settings by clicking the gear icon:
+
+- **Change API Key** - Update your MiniMax credentials
+- **Refresh Interval** - How often to check usage (10-300 seconds)
+- **Quit App** - Exit the application
+
+## Menu Bar Icon Visibility
+
+If the icon is hard to see on certain backgrounds, try:
+1. **Dark backgrounds**: The icon uses light colors for contrast
+2. **Light backgrounds**: The icon uses subtle colors that may be less visible
+3. **Overflow menu**: Check the ▼ menu if icon doesn't appear
 
 ## Architecture
 
 ```
-minimax-menu-monitor/
+MinimaxMenuMonitor/
 ├── project.yml              # XcodeGen configuration
-├── setup.sh                 # Build and setup script
+├── setup.sh                 # Build script
+├── CHANGELOG.md             # Release notes
+├── README.md                # This file
 ├── Sources/
-│   ├── App/
-│   │   ├── MinimaxMenuMonitorApp.swift
-│   │   └── AppDelegate.swift
-│   ├── Models/
-│   │   ├── UsageResponse.swift
-│   │   └── Settings.swift
-│   ├── Services/
-│   │   ├── MiniMaxAPIService.swift
-│   │   ├── KeychainService.swift
-│   │   └── UsageMonitor.swift
-│   ├── Views/
-│   │   ├── ContentView.swift
-│   │   ├── UsageView.swift
-│   │   ├── SettingsView.swift
-│   │   └── Components/
-│   │       ├── GlassCard.swift
-│   │       ├── LiquidProgressView.swift
-│   │       └── GlowingLabel.swift
-│   └── Utilities/
-│       ├── VisualEffectView.swift
-│       └── Extensions/
-└── Resources/
-    ├── Assets.xcassets/
-    ├── Info.plist
-    └── MinimaxMenuMonitor.entitlements
+│   ├── App/                 # App lifecycle & menu bar
+│   ├── Models/              # Data models
+│   ├── Services/            # API, Keychain, Monitoring
+│   ├── Views/               # SwiftUI views
+│   └── Utilities/           # Extensions, helpers
+└── Resources/               # Assets, Info.plist
 ```
-
-### Key Components
-
-- **MiniMaxAPIService**: Handles API communication with MiniMax
-- **UsageMonitor**: Manages usage data fetching and caching
-- **KeychainService**: Secure storage for API credentials
-- **GlassCard**: Reusable liquid glass UI component
-- **LiquidProgressView**: Animated progress indicator
 
 ## Development
 
 ### Building
 
-After making code changes, rebuild and run:
-
 ```bash
-# Rebuild the app
-./setup.sh
-
-# Run the app
-open build/Debug/MinimaxMenuMonitor.app
-```
-
-Or rebuild manually:
-
-```bash
+# Generate Xcode project
 xcodegen generate
+
+# Build
 xcodebuild -project MinimaxMenuMonitor.xcodeproj \
     -scheme MinimaxMenuMonitor \
     -configuration Debug \
-    -destination 'platform=macOS' \
     build
+
+# Run
+open build/Debug/MinimaxMenuMonitor.app
 ```
 
 ### Project Structure
 
-The app follows SwiftUI best practices with:
-- Clear separation of concerns
-- Reactive data flow using `@StateObject` and `@ObservedObject`
-- Dependency injection for testability
-- Protocol-oriented design
-
-## Security
-
-- **API Key Storage**: All API keys are stored in macOS Keychain
-- **First-Launch Setup**: API keys entered via secure setup window
-- **No Hardcoded Secrets**: All credentials loaded at runtime
-- **Private by Design**: No external servers, all data stays local
+- **SwiftUI** for all UI components
+- **@MainActor** for thread safety
+- **Protocol-oriented** design
+- **Reactive** data flow with `@StateObject` and `@Published`
 
 ## Contributing
 
-Contributions are welcome! Please read our contributing guidelines before submitting PRs.
+Contributions are welcome! Please read CONTRIBUTING.md for guidelines.
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Submit a pull request
 
+## Security
+
+- ✅ API keys stored in macOS Keychain
+- ✅ No hardcoded credentials
+- ✅ No external servers or tracking
+- ✅ Local-first design
+
+## Troubleshooting
+
+### App won't open
+- macOS 12.0+ required
+- Right-click → "Open" if Gatekeeper blocks
+- Check the app is extracted from .zip
+
+### Usage not showing
+- Verify API key in Settings
+- Check internet connection
+- Ensure MiniMax API is accessible
+
+### Menu bar icon missing
+- Check the overflow menu (▼)
+- Restart the app
+- Check System Settings → Menu Bar
+
+### High CPU/battery usage
+- Increase refresh interval in Settings
+- Default 60 seconds is recommended
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/doublezz10/minimax-menu-monitor/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/doublezz10/minimax-menu-monitor/discussions)
+- **Feature Requests**: Open an issue with "enhancement" label
+
 ## License
 
-MIT License - see LICENSE file for details.
+MIT License - see [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
-- [MiniMax](https://www.minimaxi.com) for their excellent API
-- Apple for SwiftUI and visual effect APIs
-- The open-source community for inspiration
-
----
-
-## Disclaimer
-
-**This project is not affiliated with, endorsed by, or officially connected to MiniMax.**
-
-This app is an independent project created for convenience and is not supported by or associated with MiniMax. All trademarks, service marks, and product names mentioned are the property of their respective owners.
+- [MiniMax](https://minimax.io) for their excellent API
+- [Apple](https://developer.apple.com) for SwiftUI and macOS
+- [SF Symbols](https://developer.apple.com/sf-symbols/) for beautiful icons

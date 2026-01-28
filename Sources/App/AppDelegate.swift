@@ -11,6 +11,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var contextMenu: NSMenu!
 
     // URLs for context menu actions
+    // Update these URLs when forking the repository
     private let githubIssuesURL = URL(string: "https://github.com/doublezz10/minimax-menu-monitor/issues")!
     private let minimaxUsageURL = URL(string: "https://platform.minimax.io/user-center/payment/coding-plan")!
 
