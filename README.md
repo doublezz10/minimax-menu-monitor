@@ -2,8 +2,9 @@
 
 A beautiful native macOS menu bar app that tracks your MiniMax API usage with a stunning liquid glass interface.
 
-![Menu Bar Icon](docs/screenshot-menu-bar.png)
-![Usage Popover](docs/screenshot-popover.png)
+![Menu Bar Icon](Resources/menu-bar-icon.png)
+![Usage View](Resources/screenshot-usage.png)
+![Settings View](Resources/screenshot-settings.png)
 
 > **Disclaimer**: This project is not affiliated with, endorsed by, or officially connected to MiniMax.
 
