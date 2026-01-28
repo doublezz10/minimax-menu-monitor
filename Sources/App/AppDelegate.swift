@@ -1,6 +1,44 @@
 import SwiftUI
 import Combine
 
+// Custom view to handle both left and right clicks on status item
+class StatusItemButtonView: NSView {
+    var onLeftClick: (() -> Void)?
+    var onRightClick: (() -> Void)?
+    var image: NSImage? {
+        didSet {
+            needsDisplay = true
+        }
+    }
+    
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
+        
+        if let image = image {
+            let iconSize = NSSize(width: 18, height: 18)
+            let imageRect = NSRect(
+                x: (dirtyRect.width - iconSize.width) / 2,
+                y: (dirtyRect.height - iconSize.height) / 2,
+                width: iconSize.width,
+                height: iconSize.height
+            )
+            image.draw(in: imageRect)
+        }
+    }
+    
+    override func mouseDown(with event: NSEvent) {
+        if event.type == .rightMouseDown {
+            onRightClick?()
+        } else {
+            onLeftClick?()
+        }
+    }
+    
+    override func rightMouseDown(with event: NSEvent) {
+        onRightClick?()
+    }
+}
+
 @MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
@@ -8,6 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var usageMonitor: UsageMonitor?
     private var cancellables = Set<AnyCancellable>()
     private var statusBar: NSStatusBar?
+    private var customButton: StatusItemButtonView?
     private var contextMenu: NSMenu!
 
     // URLs for context menu actions
@@ -81,12 +120,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupStatusItem() {
         statusBar = NSStatusBar.system
         statusItem = statusBar?.statusItem(withLength: -1)
+        
+        // Create custom button view for proper left/right click handling
+        let buttonView = StatusItemButtonView()
+        buttonView.onLeftClick = { [weak self] in
+            self?.togglePopover()
+        }
+        buttonView.onRightClick = { [weak self] in
+            guard let self = self else { return }
+            // Use current mouse location for context menu
+            let mouseLocation = NSEvent.mouseLocation
+            self.contextMenu.popUp(positioning: nil, at: mouseLocation, in: nil)
+        }
+        
+        // Set up status item with custom view
+        statusItem?.view = buttonView
         statusItem?.button?.image = NSImage(systemSymbolName: "chart.bar.fill", accessibilityDescription: "MiniMax Usage")
         statusItem?.button?.image?.size = NSSize(width: 18, height: 18)
         statusItem?.button?.image?.isTemplate = true
-        statusItem?.button?.action = #selector(togglePopover)
-        statusItem?.button?.target = self
         statusItem?.button?.menu = contextMenu
+        
+        // Update custom button with image
+        let image = NSImage(systemSymbolName: "chart.bar.fill", accessibilityDescription: "MiniMax Usage")
+        image?.size = NSSize(width: 18, height: 18)
+        image?.isTemplate = true
+        buttonView.image = image
+        customButton = buttonView
     }
 
     private func setupPopover() {

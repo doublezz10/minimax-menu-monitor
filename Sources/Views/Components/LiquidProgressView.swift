@@ -9,7 +9,7 @@ struct LiquidProgressView: View {
     @State private var animatedProgress: Double = 0
 
     private let waveSpeed: CGFloat = 4
-    private let waveAmplitude: CGFloat = 6
+    private let waveAmplitude: CGFloat = 10
 
     var body: some View {
         GeometryReader { geometry in
@@ -108,9 +108,9 @@ struct LiquidProgressView: View {
     }
 
     private func startWaveAnimation() {
-        // Gentle, natural wave motion - slow with subtle back-and-forth
-        withAnimation(.easeInOut(duration: 4.0).repeatForever(autoreverses: true)) {
-            waveOffset = .pi * 2
+        // Continuous gentle wave motion - moves continuously forward
+        withAnimation(.linear(duration: 5.0).repeatForever(autoreverses: false)) {
+            waveOffset = .pi * 4
         }
     }
 }
