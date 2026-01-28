@@ -30,6 +30,7 @@ struct SettingsView: View {
             refreshSection
             refreshButton
             quitButton
+            Spacer()
             statusMessage
         }
         .padding(.horizontal, 12)

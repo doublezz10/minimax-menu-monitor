@@ -23,20 +23,20 @@ struct ContentView: View {
 
     private var headerView: some View {
         HStack(spacing: 6) {
-            // Left: MMM logo - smaller and simpler
+            // Left: MMM logo - slightly larger
             HStack(spacing: 2) {
                 Text("M")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.system(size: 11, weight: .bold))
                     .foregroundColor(.neonCyan)
                 Text("M")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.system(size: 11, weight: .bold))
                     .foregroundColor(.neonPurple)
                 Text("M")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.system(size: 11, weight: .bold))
                     .foregroundColor(.neonBlue)
             }
-            .padding(.horizontal, 6)
-            .padding(.vertical, 3)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 4)
             .background(
                 Capsule()
                     .fill(Color.cardBackground)
@@ -44,23 +44,23 @@ struct ContentView: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("App logo: M M M")
             
-            // Center: Model indicator - compact
+            // Center: Model indicator - slightly larger
             HStack(spacing: 2) {
                 Image(systemName: "cpu")
-                    .font(.system(size: 9))
+                    .font(.system(size: 10))
                     .foregroundColor(.textTertiary)
                 if let modelName = usageMonitor.usageData?.modelName {
                     Text(modelName)
-                        .font(.system(size: 9, weight: .medium))
+                        .font(.system(size: 10, weight: .medium))
                         .foregroundColor(.textTertiary)
                 } else {
                     Text("—")
-                        .font(.system(size: 9))
+                        .font(.system(size: 10))
                         .foregroundColor(.textTertiary.opacity(0.5))
                 }
             }
-            .padding(.horizontal, 6)
-            .padding(.vertical, 3)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 4)
             .background(
                 Capsule()
                     .fill(Color.cardBackground)
@@ -69,19 +69,19 @@ struct ContentView: View {
             
             Spacer()
             
-            // Right: Settings button - minimal
+            // Right: Settings button - slightly larger
             Button(action: {
                 withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
                     showSettings.toggle()
                 }
             }) {
                 Image(systemName: showSettings ? "chart.bar.fill" : "gearshape.fill")
-                    .font(.system(size: 10))
+                    .font(.system(size: 11))
                     .foregroundColor(.textSecondary)
             }
             .buttonStyle(PlainButtonStyle())
-            .padding(.horizontal, 6)
-            .padding(.vertical, 3)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 4)
             .background(
                 Capsule()
                     .fill(Color.cardBackground)
@@ -90,7 +90,7 @@ struct ContentView: View {
             .accessibilityHint(showSettings ? "Shows usage information" : "Opens settings")
         }
         .padding(.horizontal, 8)
-        .padding(.vertical, 4)
+        .padding(.vertical, 5)
     }
 
     private var contentArea: some View {
