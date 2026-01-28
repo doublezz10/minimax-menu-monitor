@@ -4,6 +4,7 @@ struct SettingsView: View {
     @EnvironmentObject var usageMonitor: UsageMonitor
     @State private var refreshInterval: Double = 60
     @State private var saveStatus: SaveStatus = .idle
+    let onBack: () -> Void
 
     enum SaveStatus: Equatable {
         case idle
@@ -25,6 +26,7 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            settingsHeader
             apiKeySection
             refreshSection
             refreshButton
@@ -35,6 +37,24 @@ struct SettingsView: View {
         .onAppear {
             loadSettings()
         }
+    }
+
+    private var settingsHeader: some View {
+        HStack {
+            Button(action: onBack) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(.white.opacity(0.8))
+                    .frame(width: 32, height: 32)
+            }
+            .buttonStyle(PlainButtonStyle())
+            .background(
+                GlassCard()
+                    .frame(width: 32, height: 32)
+            )
+
+            Spacer()
+        }
+        .padding(.bottom, 8)
     }
 
     private var apiKeySection: some View {
@@ -204,6 +224,6 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView()
+    SettingsView(onBack: {})
         .environmentObject(UsageMonitor())
 }

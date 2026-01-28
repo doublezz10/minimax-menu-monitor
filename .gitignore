@@ -7,6 +7,9 @@ Secrets/
 private/
 config/local.json
 
+# Planning and documentation (not for release)
+docs/
+
 # macOS
 .DS_Store
 *.app/

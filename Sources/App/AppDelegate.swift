@@ -8,12 +8,50 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var usageMonitor: UsageMonitor?
     private var cancellables = Set<AnyCancellable>()
     private var statusBar: NSStatusBar?
+    private var contextMenu: NSMenu!
+
+    // URLs for context menu actions
+    private let githubIssuesURL = URL(string: "https://github.com/doublezz10/minimax-menu-monitor/issues")!
+    private let minimaxUsageURL = URL(string: "https://platform.minimax.io/user-center/payment/coding-plan")!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        setupContextMenu()
         setupUsageMonitor()
         setupStatusItem()
         setupPopover()
         setupNotifications()
+    }
+
+    private func setupContextMenu() {
+        contextMenu = NSMenu()
+
+        let reportIssueItem = NSMenuItem(title: "Report Issue", action: #selector(reportIssue), keyEquivalent: "")
+        reportIssueItem.target = self
+
+        let viewUsageItem = NSMenuItem(title: "View MiniMax Usage", action: #selector(viewUsage), keyEquivalent: "")
+        viewUsageItem.target = self
+
+        let dividerItem = NSMenuItem.separator()
+
+        let quitItem = NSMenuItem(title: "Quit App", action: #selector(quitApp), keyEquivalent: "q")
+        quitItem.target = self
+
+        contextMenu.addItem(reportIssueItem)
+        contextMenu.addItem(viewUsageItem)
+        contextMenu.addItem(dividerItem)
+        contextMenu.addItem(quitItem)
+    }
+
+    @objc private func reportIssue() {
+        NSWorkspace.shared.open(githubIssuesURL)
+    }
+
+    @objc private func viewUsage() {
+        NSWorkspace.shared.open(minimaxUsageURL)
+    }
+
+    @objc private func quitApp() {
+        NSApplication.shared.terminate(nil)
     }
 
     private func setupNotifications() {
@@ -31,7 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let hostingController = NSHostingController(rootView: setupView)
         let window = NSWindow(contentViewController: hostingController)
         window.title = "MiniMax Menu Monitor"
-        window.styleMask = [.titled, .closable]
+        window.styleMask = NSWindow.StyleMask([.titled, .closable])
         window.isReleasedWhenClosed = false
         window.center()
         window.makeKeyAndOrderFront(nil)
@@ -45,6 +83,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem?.button?.image?.isTemplate = true
         statusItem?.button?.action = #selector(togglePopover)
         statusItem?.button?.target = self
+        statusItem?.button?.menu = contextMenu
     }
 
     private func setupPopover() {
@@ -56,7 +95,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let controller = NSHostingController(rootView: contentView)
         
         popover = NSPopover()
-        popover?.contentSize = NSSize(width: 320, height: 400)
+        popover?.contentSize = NSSize(width: 320, height: 450)
         popover?.contentViewController = controller
         popover?.behavior = .transient
         popover?.animates = true
@@ -99,14 +138,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func createUsageIcon(percentage: Double, isLoading: Bool) -> NSImage {
         let size = NSSize(width: 18, height: 18)
         let image = NSImage(size: size)
-        
+
         image.lockFocus()
-        
-        // Background circle (semi-transparent)
+
+        // Black border for visibility on light backgrounds
+        let borderCircle = NSBezierPath(ovalIn: NSRect(x: 0, y: 0, width: 18, height: 18))
+        NSColor.black.setStroke()
+        borderCircle.lineWidth = 1.5
+        borderCircle.stroke()
+
+        // Background circle (semi-transparent white)
         let backgroundCircle = NSBezierPath(ovalIn: NSRect(x: 1, y: 1, width: 16, height: 16))
-        NSColor.white.withAlphaComponent(0.3).setFill()
+        NSColor.white.withAlphaComponent(0.2).setFill()
         backgroundCircle.fill()
-        
+
         // Usage circle (fills based on percentage)
         let usageAngle = 90 - (360 * percentage)
         let usageCircle = NSBezierPath()
@@ -119,31 +164,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             clockwise: true
         )
         usageCircle.close()
-        
-        // Color based on usage (white -> yellow -> red)
+
+        // Color based on usage (cyan -> yellow -> red for better visibility)
         let color: NSColor
         if percentage < 0.5 {
-            color = .white
+            color = .cyan
         } else if percentage < 0.8 {
             color = .systemYellow
         } else {
             color = .systemRed
         }
-        
-        color.withAlphaComponent(0.8).setFill()
+
+        color.withAlphaComponent(0.9).setFill()
         usageCircle.fill()
-        
+
         // Loading indicator
         if isLoading {
             let loadingCircle = NSBezierPath(ovalIn: NSRect(x: 3, y: 3, width: 12, height: 12))
-            NSColor.white.withAlphaComponent(0.5).setStroke()
+            NSColor.white.withAlphaComponent(0.6).setStroke()
             loadingCircle.lineWidth = 1
             loadingCircle.stroke()
         }
-        
+
         image.unlockFocus()
         image.isTemplate = false
-        
+
         return image
     }
 }

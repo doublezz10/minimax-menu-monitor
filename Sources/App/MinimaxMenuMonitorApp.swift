@@ -27,8 +27,12 @@ struct FirstLaunchView: View {
     @State private var errorMessage: String?
     @State private var showSuccess = false
 
+    // URLs
+    private let githubIssuesURL = URL(string: "https://github.com/doublezz10/minimax-menu-monitor/issues")!
+    private let minimaxUsageURL = URL(string: "https://platform.minimax.io/user-center/payment/coding-plan")!
+
     var body: some View {
-        VStack(spacing: 32) {
+        VStack(spacing: 24) {
             Spacer()
 
             // Logo/Icon
@@ -108,10 +112,27 @@ struct FirstLaunchView: View {
 
             Spacer()
 
-            // Footer
-            Text("Your API key is stored securely in macOS Keychain")
-                .font(.caption2)
-                .foregroundColor(.white.opacity(0.4))
+            // Footer with links
+            VStack(spacing: 8) {
+                HStack(spacing: 24) {
+                    LinkButton(
+                        title: "Report Issue",
+                        url: githubIssuesURL,
+                        icon: "exclamationmark.bubble"
+                    )
+
+                    LinkButton(
+                        title: "View Usage",
+                        url: minimaxUsageURL,
+                        icon: "chart.bar"
+                    )
+                }
+
+                Text("Your API key is stored securely in macOS Keychain")
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.4))
+            }
+            .padding(.bottom, 20)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(
@@ -144,6 +165,31 @@ struct FirstLaunchView: View {
             isValidating = false
             errorMessage = "Failed to save API key: \(error.localizedDescription)"
         }
+    }
+}
+
+struct LinkButton: View {
+    let title: String
+    let url: URL
+    let icon: String
+
+    var body: some View {
+        Link(destination: url) {
+            HStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.caption)
+                Text(title)
+                    .font(.caption)
+            }
+            .foregroundColor(.white.opacity(0.6))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(
+                Capsule()
+                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 

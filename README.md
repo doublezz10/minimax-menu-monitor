@@ -2,6 +2,8 @@
 
 A beautiful native MacOS menu bar app that tracks your MiniMax API usage with a stunning liquid glass interface.
 
+> **Disclaimer**: This project is not affiliated with, endorsed by, or in any way officially connected to MiniMax. All MiniMax-related features are for user convenience only.
+
 ## Features
 
 - 🍏 **Native MacOS Menu Bar App** - Runs quietly in your menu bar
@@ -162,3 +164,11 @@ MIT License - see LICENSE file for details.
 - [MiniMax](https://www.minimaxi.com) for their excellent API
 - Apple for SwiftUI and visual effect APIs
 - The open-source community for inspiration
+
+---
+
+## Disclaimer
+
+**This project is not affiliated with, endorsed by, or officially connected to MiniMax.**
+
+This app is an independent project created for convenience and is not supported by or associated with MiniMax. All trademarks, service marks, and product names mentioned are the property of their respective owners.
