@@ -22,21 +22,21 @@ struct ContentView: View {
     }
 
     private var headerView: some View {
-        HStack(spacing: 0) {
-            // Left: MMM logo
-            HStack(spacing: 3) {
+        HStack(spacing: 6) {
+            // Left: MMM logo - smaller and simpler
+            HStack(spacing: 2) {
                 Text("M")
-                    .font(.caption.weight(.bold))
+                    .font(.system(size: 10, weight: .bold))
                     .foregroundColor(.neonCyan)
                 Text("M")
-                    .font(.caption.weight(.bold))
+                    .font(.system(size: 10, weight: .bold))
                     .foregroundColor(.neonPurple)
                 Text("M")
-                    .font(.caption.weight(.bold))
+                    .font(.system(size: 10, weight: .bold))
                     .foregroundColor(.neonBlue)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
             .background(
                 Capsule()
                     .fill(Color.cardBackground)
@@ -44,23 +44,23 @@ struct ContentView: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("App logo: M M M")
             
-            // Center: Model indicator - always visible with same sizing
-            HStack(spacing: 4) {
+            // Center: Model indicator - compact
+            HStack(spacing: 2) {
                 Image(systemName: "cpu")
-                    .font(.caption2)
+                    .font(.system(size: 9))
                     .foregroundColor(.textTertiary)
                 if let modelName = usageMonitor.usageData?.modelName {
                     Text(modelName)
-                        .font(.caption2)
+                        .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.textTertiary)
                 } else {
-                    Text("No data")
-                        .font(.caption2)
+                    Text("—")
+                        .font(.system(size: 9))
                         .foregroundColor(.textTertiary.opacity(0.5))
                 }
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
             .background(
                 Capsule()
                     .fill(Color.cardBackground)
@@ -69,19 +69,19 @@ struct ContentView: View {
             
             Spacer()
             
-            // Right: Settings button
+            // Right: Settings button - minimal
             Button(action: {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
                     showSettings.toggle()
                 }
             }) {
                 Image(systemName: showSettings ? "chart.bar.fill" : "gearshape.fill")
-                    .font(.caption)
+                    .font(.system(size: 10))
                     .foregroundColor(.textSecondary)
             }
             .buttonStyle(PlainButtonStyle())
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
             .background(
                 Capsule()
                     .fill(Color.cardBackground)
@@ -89,8 +89,8 @@ struct ContentView: View {
             .accessibilityLabel(showSettings ? "Usage view" : "Settings")
             .accessibilityHint(showSettings ? "Shows usage information" : "Opens settings")
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
     }
 
     private var contentArea: some View {

@@ -25,17 +25,17 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             apiKeySection
             refreshSection
             refreshButton
             quitButton
             statusMessage
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 12)
+        .padding(.horizontal, 12)
+        .padding(.top, 8)
         .padding(.bottom, 8)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .onAppear {
             loadSettings()
         }

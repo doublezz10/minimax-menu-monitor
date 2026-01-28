@@ -5,7 +5,7 @@ struct UsageView: View {
     @State private var currentTime = Date()
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             if usageMonitor.isLoading && usageMonitor.usageData == nil {
                 loadingView
             } else if let error = usageMonitor.error {
@@ -16,12 +16,11 @@ struct UsageView: View {
                 emptyStateView
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 12)
+        .padding(.horizontal, 12)
+        .padding(.top, 8)
         .padding(.bottom, 8)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .onAppear {
-            // Update time every 10 seconds for live countdown (optimized from 1 second)
             Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
                 currentTime = Date()
             }
