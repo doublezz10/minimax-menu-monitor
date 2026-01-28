@@ -162,8 +162,8 @@ struct SettingsView: View {
             }
             .font(.subheadline.weight(.medium))
             .foregroundColor(.textPrimary)
-            .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
+            .frame(maxWidth: .infinity)
             .background(
                 LinearGradient(
                     colors: [Color.neonPurple, Color.neonBlue],
@@ -186,8 +186,8 @@ struct SettingsView: View {
             }
             .font(.subheadline.weight(.medium))
             .foregroundColor(.textSecondary)
-            .frame(maxWidth: .infinity)
             .padding(.vertical, 10)
+            .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.glassBorder, lineWidth: 1)
