@@ -10,6 +10,13 @@ extension Color {
     static let neonCyan = Color(red: 0.0, green: 1.0, blue: 0.8)
     static let neonPurple = Color(red: 0.6, green: 0.2, blue: 1.0)
     static let neonBlue = Color(red: 0.2, green: 0.4, blue: 1.0)
+    
+    // MARK: - Accent Color
+    // Uses macOS system accent color with neon override capability
+    static var appAccent: Color {
+        // Using brand color - can be configured to use system accent
+        Color(red: 0.5, green: 0.3, blue: 0.9)
+    }
 }
 
 // MARK: - Semantic Colors
@@ -49,12 +56,20 @@ extension Color {
 
 // MARK: - Text Hierarchy
 // Consistent text colors for visual hierarchy
+// Uses macOS semantic colors for native feel
 
 extension Color {
-    static let textPrimary = Color.white
-    static let textSecondary = Color.white.opacity(0.8)
-    static let textTertiary = Color.white.opacity(0.6)
-    static let textDisabled = Color.white.opacity(0.3)
+    // Semantic text colors (macOS native)
+    static let labelPrimary = Color(NSColor.labelColor)
+    static let labelSecondary = Color(NSColor.secondaryLabelColor)
+    static let labelTertiary = Color(NSColor.tertiaryLabelColor)
+    static let labelQuaternary = Color(NSColor.quaternaryLabelColor)
+    
+    // Backward compatibility aliases
+    static let textPrimary = labelPrimary
+    static let textSecondary = labelSecondary
+    static let textTertiary = labelTertiary
+    static let textDisabled = labelQuaternary
 }
 
 // MARK: - Usage Indicator Colors

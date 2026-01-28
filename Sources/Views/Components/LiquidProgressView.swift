@@ -16,7 +16,7 @@ struct LiquidProgressView: View {
             ZStack {
                 backgroundGradient
 
-                waveShape(progress: animatedProgress)
+                waveShape(progress: animatedProgress, in: geometry)
                     .fill(
                         LinearGradient(
                             colors: [
@@ -28,7 +28,7 @@ struct LiquidProgressView: View {
                             endPoint: .bottom
                         )
                     )
-                    .clipShape(waveShape(progress: animatedProgress))
+                    .clipShape(waveShape(progress: animatedProgress, in: geometry))
 
                 contentOverlay(in: geometry)
             }
@@ -58,18 +58,18 @@ struct LiquidProgressView: View {
         )
     }
 
-    private func waveShape(progress: Double) -> Path {
+    private func waveShape(progress: Double, in geometry: GeometryProxy) -> Path {
         var path = Path()
 
-        let width: CGFloat = 300
-        let height: CGFloat = 200
+        let width = geometry.size.width
+        let height = geometry.size.height
         let progressHeight = height * CGFloat(1 - progress)
         let midY = progressHeight
 
         path.move(to: CGPoint(x: 0, y: height))
 
         for x in stride(from: 0, through: width, by: 1) {
-            let relativeX = x / CGFloat(width)
+            let relativeX = x / width
             let angle = (relativeX * .pi * 4) + waveOffset
             let y = midY + sin(angle) * waveAmplitude
 
@@ -80,7 +80,7 @@ struct LiquidProgressView: View {
             }
         }
 
-        path.addLine(to: CGPoint(x: 300, y: height))
+        path.addLine(to: CGPoint(x: width, y: height))
         path.addLine(to: CGPoint(x: 0, y: height))
         path.closeSubpath()
 

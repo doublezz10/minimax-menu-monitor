@@ -16,8 +16,10 @@ struct UsageView: View {
                 emptyStateView
             }
         }
-        .padding(16)
-        .frame(width: 300)
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear {
             // Update time every 10 seconds for live countdown (optimized from 1 second)
             Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
@@ -72,24 +74,6 @@ struct UsageView: View {
 
     private var usageDisplay: some View {
         VStack(spacing: 12) {
-            // Model name
-            if let modelName = usageMonitor.usageData?.modelName {
-                HStack {
-                    Image(systemName: "cpu")
-                        .font(.caption)
-                        .foregroundColor(.neonCyan)
-                    Text(modelName)
-                        .font(.caption.weight(.medium))
-                        .foregroundColor(.neonCyan)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(
-                    Capsule()
-                        .fill(Color.neonCyan.opacity(0.15))
-                )
-            }
-
             // Compact liquid progress
             LiquidProgressView(
                 progress: usageMonitor.usagePercentage,

@@ -25,37 +25,20 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        VStack(spacing: 20) {
-            settingsHeader
+        VStack(spacing: 16) {
             apiKeySection
             refreshSection
             refreshButton
             quitButton
             statusMessage
         }
-        .padding(16)
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear {
             loadSettings()
         }
-    }
-
-    private var settingsHeader: some View {
-        HStack {
-            Button(action: onBack) {
-                Image(systemName: "chevron.left")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundColor(.textSecondary)
-                    .frame(width: 32, height: 32)
-            }
-            .buttonStyle(PlainButtonStyle())
-            .background(
-                GlassCard()
-                    .frame(width: 32, height: 32)
-            )
-
-            Spacer()
-        }
-        .padding(.bottom, 8)
     }
 
     private var apiKeySection: some View {
@@ -218,9 +201,6 @@ struct SettingsView: View {
 
         // Close the popover
         NSApp.windows.filter { $0.isVisible && $0.title.isEmpty }.first?.close()
-
-        // Post notification to reopen setup
-        NotificationCenter.default.post(name: Notification.Name("openAPIKeySetup"), object: nil)
     }
 }
 

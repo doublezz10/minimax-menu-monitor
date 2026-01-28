@@ -30,6 +30,20 @@ final class UsageMonitor: ObservableObject {
     func startMonitoring() {
         loadInitialData()
         setupRefreshTimer()
+        setupNotificationObservers()
+    }
+    
+    private func setupNotificationObservers() {
+        // Listen for context menu refresh action
+        NotificationCenter.default.addObserver(
+            forName: Notification.Name("refreshUsage"),
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                await self?.refresh()
+            }
+        }
     }
     
     func stopMonitoring() {

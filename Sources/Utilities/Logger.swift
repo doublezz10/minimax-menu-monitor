@@ -1,3 +1,4 @@
+import Foundation
 import os.log
 
 // MARK: - Logging System
@@ -97,7 +98,7 @@ enum AppLogger {
     /// Log error with context
     static func logError(_ error: Error, context: String = "") {
         let contextPrefix = context.isEmpty ? "" : "\(context) | "
-        error("\(contextPrefix)Error: \(error.localizedDescription)")
+        Self.error("\(contextPrefix)Error: \(error.localizedDescription)")
     }
     
     /// Log usage data refresh

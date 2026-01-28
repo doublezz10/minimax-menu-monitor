@@ -20,29 +20,52 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupUsageMonitor()
         setupStatusItem()
         setupPopover()
-        setupNotifications()
     }
 
     private func setupContextMenu() {
         contextMenu = NSMenu()
-
+        
+        // Report Issue - no shortcut
         let reportIssueItem = NSMenuItem(title: "Report Issue", action: #selector(reportIssue), keyEquivalent: "")
         reportIssueItem.target = self
-
+        
+        // View MiniMax Usage - no shortcut (opens external site)
         let viewUsageItem = NSMenuItem(title: "View MiniMax Usage", action: #selector(viewUsage), keyEquivalent: "")
         viewUsageItem.target = self
-
+        
+        // Divider
         let dividerItem = NSMenuItem.separator()
-
+        
+        // Refresh - Cmd+R
+        let refreshItem = NSMenuItem(title: "Refresh Usage", action: #selector(refreshUsage), keyEquivalent: "r")
+        refreshItem.keyEquivalentModifierMask = [.command]
+        refreshItem.target = self
+        
+        // Divider
+        let dividerItem2 = NSMenuItem.separator()
+        
+        // Quit - Cmd+Q (standard macOS shortcut)
         let quitItem = NSMenuItem(title: "Quit App", action: #selector(quitApp), keyEquivalent: "q")
+        quitItem.keyEquivalentModifierMask = [.command]
         quitItem.target = self
-
+        
         contextMenu.addItem(reportIssueItem)
         contextMenu.addItem(viewUsageItem)
         contextMenu.addItem(dividerItem)
+        contextMenu.addItem(refreshItem)
+        contextMenu.addItem(dividerItem2)
         contextMenu.addItem(quitItem)
     }
-
+    
+    @objc private func refreshUsage() {
+        NotificationCenter.default.post(name: Notification.Name("refreshUsage"), object: nil)
+    }
+    
+    @objc private func openSettings() {
+        // Post notification to open settings view
+        NotificationCenter.default.post(name: Notification.Name("openSettings"), object: nil)
+    }
+    
     @objc private func reportIssue() {
         NSWorkspace.shared.open(githubIssuesURL)
     }
@@ -53,27 +76,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func quitApp() {
         NSApplication.shared.terminate(nil)
-    }
-
-    private func setupNotifications() {
-        NotificationCenter.default.addObserver(
-            forName: Notification.Name("openAPIKeySetup"),
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            self?.openSetupWindow()
-        }
-    }
-
-    private func openSetupWindow() {
-        let setupView = FirstLaunchView()
-        let hostingController = NSHostingController(rootView: setupView)
-        let window = NSWindow(contentViewController: hostingController)
-        window.title = "MiniMax Menu Monitor"
-        window.styleMask = NSWindow.StyleMask([.titled, .closable])
-        window.isReleasedWhenClosed = false
-        window.center()
-        window.makeKeyAndOrderFront(nil)
     }
 
     private func setupStatusItem() {
@@ -96,7 +98,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let controller = NSHostingController(rootView: contentView)
         
         popover = NSPopover()
-        popover?.contentSize = NSSize(width: 320, height: 450)
+        popover?.contentSize = NSSize(width: 300, height: 400)
         popover?.contentViewController = controller
         popover?.behavior = .transient
         popover?.animates = true
