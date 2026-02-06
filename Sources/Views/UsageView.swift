@@ -33,7 +33,7 @@ struct UsageView: View {
                 .progressViewStyle(CircularProgressViewStyle(tint: .textPrimary))
                 .scaleEffect(1.2)
             Text("Loading...")
-                .font(.caption)
+                .font(AppFont.caption)
                 .foregroundColor(.textSecondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -42,15 +42,15 @@ struct UsageView: View {
     private func errorView(_ error: Error) -> some View {
         VStack(spacing: 12) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .font(.title)
+                .font(AppFont.title)
                 .foregroundColor(.warning)
 
             Text("Error")
-                .font(.subheadline.weight(.medium))
+                .font(AppFont.subhead.weight(.medium))
                 .foregroundColor(.textPrimary)
 
             Text(error.localizedDescription)
-                .font(.caption)
+                .font(AppFont.caption)
                 .foregroundColor(.textSecondary)
                 .multilineTextAlignment(.center)
 
@@ -60,7 +60,7 @@ struct UsageView: View {
                 }
             }) {
                 Text("Retry")
-                    .font(.caption.weight(.medium))
+                    .font(AppFont.caption.weight(.medium))
                     .foregroundColor(.textPrimary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
@@ -141,11 +141,11 @@ struct UsageView: View {
     private func compactStat(title: String, value: String, icon: String, color: Color) -> some View {
         VStack(spacing: 4) {
             Image(systemName: icon)
-                .font(.caption)
+                .font(AppFont.caption)
                 .foregroundColor(color)
 
             Text(value)
-                .font(.body.weight(.bold))
+                .font(AppFont.body.weight(.bold))
                 .foregroundColor(.textPrimary)
 
             Text(title)
@@ -215,15 +215,15 @@ struct UsageView: View {
     private var emptyStateView: some View {
         VStack(spacing: 12) {
             Image(systemName: "key.fill")
-                .font(.title)
+                .font(AppFont.title)
                 .foregroundColor(.textTertiary)
 
             Text("No API Key")
-                .font(.subheadline.weight(.medium))
+                .font(AppFont.subhead.weight(.medium))
                 .foregroundColor(.textPrimary)
 
             Text("Add your key in settings")
-                .font(.caption)
+                .font(AppFont.caption)
                 .foregroundColor(.textSecondary)
         }
         .padding()

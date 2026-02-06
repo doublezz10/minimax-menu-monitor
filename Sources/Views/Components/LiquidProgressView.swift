@@ -5,11 +5,12 @@ struct LiquidProgressView: View {
     let remaining: String
     let total: String
 
-    @State private var waveOffset: CGFloat = 0
+    @State private var time: TimeInterval = 0
     @State private var animatedProgress: Double = 0
+    @State private var timer: Timer?
 
-    private let waveSpeed: CGFloat = 4
-    private let waveAmplitude: CGFloat = 18
+    private let baseAmplitude: CGFloat = 12
+    private let animationInterval: TimeInterval = 0.1
 
     var body: some View {
         GeometryReader { geometry in
@@ -38,10 +39,13 @@ struct LiquidProgressView: View {
             withAnimation(.easeOut(duration: 1.2)) {
                 animatedProgress = progress
             }
-            // Start wave animation after progress fills in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                 startWaveAnimation()
             }
+        }
+        .onDisappear {
+            timer?.invalidate()
+            timer = nil
         }
         .onChange(of: progress) { newValue in
             withAnimation(.easeOut(duration: 0.8)) {
@@ -67,14 +71,23 @@ struct LiquidProgressView: View {
         let width = geometry.size.width
         let height = geometry.size.height
         let progressHeight = height * CGFloat(1 - progress)
-        let midY = progressHeight
+        let baseY = progressHeight
 
         path.move(to: CGPoint(x: 0, y: height))
 
         for x in stride(from: 0, through: width, by: 1) {
-            let relativeX = x / width
-            let angle = (relativeX * .pi * 4) + waveOffset
-            let y = midY + sin(angle) * waveAmplitude
+            let normalizedX = x / width
+            
+            // Multiple overlapping sine waves for organic lava lamp effect
+            // Slow, breathing motion
+            let wave1 = sin(normalizedX * .pi * 2 + time * 0.5) * baseAmplitude * 0.5
+            let wave2 = sin(normalizedX * .pi * 3 + time * 0.3) * baseAmplitude * 0.3
+            let wave3 = sin(normalizedX * .pi * 1.5 + time * 0.7) * baseAmplitude * 0.2
+            
+            // Slow undulation
+            let undulation = sin(time * 0.2) * baseAmplitude * 0.3
+            
+            let y = baseY + wave1 + wave2 + wave3 + undulation
 
             if x == 0 {
                 path.move(to: CGPoint(x: x, y: y))
@@ -108,9 +121,9 @@ struct LiquidProgressView: View {
     }
 
     private func startWaveAnimation() {
-        // Continuous wave motion with autoreverses
-        withAnimation(.easeInOut(duration: 2.5).repeatForever(autoreverses: true)) {
-            waveOffset = .pi * 4
+        // Slow, breathing animation like a lava lamp
+        timer = Timer.scheduledTimer(withTimeInterval: animationInterval, repeats: true) { _ in
+            time += animationInterval
         }
     }
 }

@@ -53,7 +53,7 @@ struct SettingsView: View {
                     Image(systemName: "exclamationmark.bubble")
                     Text("Report Issue")
                 }
-                .font(.caption)
+                .font(AppFont.caption)
                 .foregroundColor(.textTertiary)
             }
             
@@ -62,7 +62,7 @@ struct SettingsView: View {
                     Image(systemName: "creditcard")
                     Text("Manage Subscription")
                 }
-                .font(.caption)
+                .font(AppFont.caption)
                 .foregroundColor(.textTertiary)
             }
         }
@@ -80,7 +80,7 @@ struct SettingsView: View {
     private var currentKeyInfo: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("API Key")
-                .font(.caption)
+                .font(AppFont.caption)
                 .foregroundColor(.textTertiary)
 
             HStack {
@@ -88,7 +88,7 @@ struct SettingsView: View {
                     .foregroundColor(.neonCyan)
 
                 Text("Configured")
-                    .font(.caption.weight(.medium))
+                    .font(AppFont.caption.weight(.medium))
                     .foregroundColor(.neonCyan)
 
                 Spacer()
@@ -107,16 +107,14 @@ struct SettingsView: View {
 
     private var changeKeyButton: some View {
         Button(action: openKeySetup) {
-            VStack(spacing: 4) {
-                HStack {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                    Text("Change")
-                }
-                .font(.caption.weight(.medium))
-                .foregroundColor(.textPrimary)
+            HStack(spacing: 4) {
+                Image(systemName: "arrow.triangle.2.circlepath")
+                Text("Change")
             }
+            .font(AppFont.caption.weight(.medium))
+            .foregroundColor(.textPrimary)
         }
-        .frame(width: 80)
+        .frame(width: 80, height: 60)
         .buttonStyle(PlainButtonStyle())
         .background(
             RoundedRectangle(cornerRadius: 10)
@@ -125,16 +123,16 @@ struct SettingsView: View {
     }
 
     private var refreshSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Refresh Interval")
-                    .font(.subheadline.weight(.medium))
+                Text("Refresh")
+                    .font(AppFont.caption.weight(.medium))
                     .foregroundColor(.textPrimary)
 
                 Spacer()
 
                 Text("\(Int(refreshInterval))s")
-                    .font(.subheadline)
+                    .font(AppFont.caption)
                     .foregroundColor(.textSecondary)
             }
 
@@ -156,13 +154,13 @@ struct SettingsView: View {
                 await usageMonitor.refresh()
             }
         }) {
-            HStack {
+            HStack(spacing: 6) {
                 Image(systemName: "arrow.clockwise")
-                Text("Refresh Now")
+                Text("Refresh")
             }
-            .font(.subheadline.weight(.medium))
+            .font(AppFont.caption.weight(.medium))
             .foregroundColor(.textPrimary)
-            .padding(.vertical, 12)
+            .padding(.vertical, 10)
             .frame(maxWidth: .infinity)
             .background(
                 LinearGradient(
@@ -171,7 +169,7 @@ struct SettingsView: View {
                     endPoint: .trailing
                 )
             )
-            .cornerRadius(10)
+            .cornerRadius(8)
         }
         .buttonStyle(PlainButtonStyle())
     }
@@ -180,16 +178,16 @@ struct SettingsView: View {
         Button(action: {
             NSApplication.shared.terminate(nil)
         }) {
-            HStack {
+            HStack(spacing: 6) {
                 Image(systemName: "xmark.circle")
-                Text("Quit App")
+                Text("Quit")
             }
-            .font(.subheadline.weight(.medium))
+            .font(AppFont.caption.weight(.medium))
             .foregroundColor(.textSecondary)
-            .padding(.vertical, 10)
+            .padding(.vertical, 8)
             .frame(maxWidth: .infinity)
             .background(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 8)
                     .stroke(Color.glassBorder, lineWidth: 1)
             )
         }
@@ -201,11 +199,11 @@ struct SettingsView: View {
             switch saveStatus {
             case .saved:
                 Text("Settings saved successfully!")
-                    .font(.caption)
+                    .font(AppFont.caption)
                     .foregroundColor(.success)
             case .error(let message):
                 Text(message)
-                    .font(.caption)
+                    .font(AppFont.caption)
                     .foregroundColor(.error)
             default:
                 EmptyView()
