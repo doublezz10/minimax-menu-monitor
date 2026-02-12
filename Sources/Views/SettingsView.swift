@@ -4,6 +4,9 @@ struct SettingsView: View {
     @EnvironmentObject var usageMonitor: UsageMonitor
     @State private var refreshInterval: Double = 60
     @State private var saveStatus: SaveStatus = .idle
+    @State private var showingChangeKeyPopout = false
+    @State private var newApiKey = ""
+    @State private var keyChangeStatus: KeyChangeStatus = .idle
     let onBack: () -> Void
 
     enum SaveStatus: Equatable {
@@ -13,6 +16,24 @@ struct SettingsView: View {
         case error(String)
 
         static func == (lhs: SaveStatus, rhs: SaveStatus) -> Bool {
+            switch (lhs, rhs) {
+            case (.idle, .idle), (.saving, .saving), (.saved, .saved):
+                return true
+            case (.error(let lhsMsg), .error(let rhsMsg)):
+                return lhsMsg == rhsMsg
+            default:
+                return false
+            }
+        }
+    }
+
+    enum KeyChangeStatus: Equatable {
+        case idle
+        case saving
+        case saved
+        case error(String)
+
+        static func == (lhs: KeyChangeStatus, rhs: KeyChangeStatus) -> Bool {
             switch (lhs, rhs) {
             case (.idle, .idle), (.saving, .saving), (.saved, .saved):
                 return true
@@ -106,7 +127,11 @@ struct SettingsView: View {
     }
 
     private var changeKeyButton: some View {
-        Button(action: openKeySetup) {
+        Button(action: {
+            showingChangeKeyPopout = true
+            newApiKey = ""
+            keyChangeStatus = .idle
+        }) {
             HStack(spacing: 4) {
                 Image(systemName: "arrow.triangle.2.circlepath")
                 Text("Change")
@@ -120,6 +145,74 @@ struct SettingsView: View {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.glassBorder, lineWidth: 1)
         )
+        .popover(isPresented: $showingChangeKeyPopout) {
+            changeKeyPopout
+                .frame(width: 300, height: 180)
+        }
+    }
+
+    private var changeKeyPopout: some View {
+        VStack(spacing: 12) {
+            Text("Change API Key")
+                .font(.headline)
+                .foregroundColor(.textPrimary)
+
+            TextField("Enter new API key", text: $newApiKey)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .font(.system(.body, design: .monospaced))
+                .disableAutocorrection(true)
+
+            HStack(spacing: 12) {
+                Button(action: {
+                    showingChangeKeyPopout = false
+                }) {
+                    Text("Cancel")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(PlainButtonStyle())
+
+                Button(action: saveNewApiKey) {
+                    Text("Save")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .disabled(newApiKey.isEmpty || keyChangeStatus == .saving)
+            }
+
+            Group {
+                switch keyChangeStatus {
+                case .saved:
+                    Text("API key updated successfully!")
+                        .font(.caption)
+                        .foregroundColor(.success)
+                case .error(let message):
+                    Text(message)
+                        .font(.caption)
+                        .foregroundColor(.error)
+                default:
+                    EmptyView()
+                }
+            }
+            .animation(.easeInOut(duration: 0.3), value: keyChangeStatus)
+        }
+        .padding()
+    }
+
+    private func saveNewApiKey() {
+        keyChangeStatus = .saving
+
+        do {
+            try KeychainService.shared.save(key: newApiKey)
+            Settings.shared.apiKey = newApiKey
+            keyChangeStatus = .saved
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                showingChangeKeyPopout = false
+                keyChangeStatus = .idle
+            }
+        } catch {
+            keyChangeStatus = .error("Failed to save API key: \(error.localizedDescription)")
+        }
     }
 
     private var refreshSection: some View {
