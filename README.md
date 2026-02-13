@@ -67,16 +67,6 @@ For now, building from source is the recommended approach.
 
 ## Usage
 
-### Menu Bar Icon
-
-The icon in your menu bar shows your usage percentage:
-
-| Color | Usage | Meaning |
-|-------|-------|---------|
-| 🟢 Cyan | 0-50% | Healthy usage |
-| 🟡 Amber | 50-80% | Moderate usage |
-| 🔴 Red | 80-100% | High usage |
-
 ### First Launch
 
 On first launch, the app opens directly to **Settings** where you can enter your MiniMax API key. Once configured, you'll automatically see the **Usage** view with your token usage.
